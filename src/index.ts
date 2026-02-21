@@ -4,6 +4,29 @@ const part1 = document.querySelector(".part1") as HTMLBodyElement;
 const search_btn = document.getElementById("search-btn") as HTMLButtonElement;
 const add_btn = document.getElementById("add-btn") as HTMLButtonElement;
 
+const searchInput = document.querySelector('.search-input') as HTMLInputElement;
+const searchBtn = document.querySelector('.search-btn') as HTMLButtonElement;
+
+searchBtn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (query) {
+        getData(query)
+        console.log(query)
+    }
+});
+
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const query = searchInput.value.trim();
+        if (query) {
+            getData(query)
+        console.log(query)
+        }
+    }
+});
+
+
+
 // const food_instructions = document.querySelector(".food-instructions") as HTMLBodyElement;
 
 
@@ -34,7 +57,7 @@ async function getData(food: string) {
     }
 }
 
-getData("pizza");
+// getData("pizza");
 
 function createFoodCard(meal: any) {
 

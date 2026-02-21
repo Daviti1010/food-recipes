@@ -2,6 +2,24 @@ const cards = document.querySelector(".cards");
 const part1 = document.querySelector(".part1");
 const search_btn = document.getElementById("search-btn");
 const add_btn = document.getElementById("add-btn");
+const searchInput = document.querySelector('.search-input');
+const searchBtn = document.querySelector('.search-btn');
+searchBtn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (query) {
+        getData(query);
+        console.log(query);
+    }
+});
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const query = searchInput.value.trim();
+        if (query) {
+            getData(query);
+            console.log(query);
+        }
+    }
+});
 async function getData(food) {
     try {
         const response = await fetch(`/api-info/search/${food}`);
@@ -23,7 +41,7 @@ async function getData(food) {
         return null;
     }
 }
-getData("pizza");
+// getData("pizza");
 function createFoodCard(meal) {
     const card1 = document.createElement("div");
     const card2 = document.createElement("div");

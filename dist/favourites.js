@@ -1,4 +1,3 @@
-import { moveToPage } from './index.js';
 const cardsContainer = document.querySelector('.cards');
 async function gettingIdFromDB() {
     try {
@@ -78,5 +77,14 @@ function displayFoodCards(meal) {
     moveToPage(seeFoodInstructions, meal, foodName);
     cardsContainer?.appendChild(unifiedDiv);
 }
+function moveToPage(seeFoodInstructions, meal, foodName) {
+    seeFoodInstructions.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
+        ?id=${meal.idMeal}&name=${meal.strMeal}`;
+        // console.log(foodName.textContent);
+    });
+}
 gettingIdFromDB();
+export {};
 //# sourceMappingURL=favourites.js.map

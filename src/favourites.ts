@@ -1,4 +1,3 @@
-import { moveToPage } from './index.js';
 
 const cardsContainer = document.querySelector('.cards') as HTMLDivElement;
 
@@ -105,6 +104,17 @@ function displayFoodCards(meal: any) {
 
 
     cardsContainer?.appendChild(unifiedDiv);
+}
+
+function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any, foodName: HTMLElement) { 
+        seeFoodInstructions.addEventListener("click", function(e) {
+
+        e.preventDefault();
+        window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
+        ?id=${meal.idMeal}&name=${meal.strMeal}`;
+
+        // console.log(foodName.textContent);
+    })
 }
 
 gettingIdFromDB();
