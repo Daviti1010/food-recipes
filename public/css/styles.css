@@ -1,0 +1,103 @@
+.header-container {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    background-color: rgb(167, 167, 167);
+    height: 50px;
+}
+
+.header-container ul {
+    display: flex;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.header-container ul li {
+    text-decoration: none;
+    color: black;
+}
+
+.part1 {
+    display: flex;
+    /* transition: 0.3s; */
+    justify-content: center;
+    margin-top: 70px;
+}
+
+
+.card1 {
+    background-color: burlywood;
+    height: 200px;
+    width: 200px;
+}
+
+
+.card2 {
+    background-color: aquamarine;
+    height: 200px;
+    width: 500px;
+}
+
+.js-card {
+    background-color: black;
+    width: 100px;
+    height: 100px;
+}
+
+img {
+    width: 200px;
+    height: 200px;
+}
+
+.add-buttons {
+    margin-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.cards div div h1 {
+    font-size: 18px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.part {
+    display: flex;
+    flex-direction: column;
+}
+
+.unified-div {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.food-origins {
+    font-size: 14px;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.food-ingredients {
+    font-size: 14px;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.food-instructions {
+    font-size: 16px;
+    margin-left: 10px;
+    text-decoration: underline;
+    color: black;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.add-to-favorites-btn {
+    padding: 10px;
+    background-color: lightcoral;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}

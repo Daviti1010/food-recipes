@@ -1,0 +1,15 @@
+.env
+package-lock.json
+node_modules
+favourites.d.ts
+favourites.d.ts.map
+index.d.ts
+index.d.ts.map
+instructions.d.ts
+instructions.d.ts.map
+server.d.ts
+server.d.ts.map
+favourites.js.map
+index.js.map
+instructions.js.map
+server.js.map
