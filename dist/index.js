@@ -51,9 +51,8 @@ function createFoodCard(meal) {
     const foodIngredients = document.createElement("p");
     const seeFoodInstructions = document.createElement("a");
     const foodInstructions = document.createElement("p");
-    const addToFavorites = document.createElement("button");
-    addToFavorites.textContent = "Add to Favorites";
-    addToFavorites.className = "add-to-favorites-btn";
+    const addBtn = document.createElement("button");
+    const addPlus = '<i class="fa-solid fa-plus"></i>';
     const img1 = document.createElement('img');
     img1.src = meal.strMealThumb;
     foodName.textContent = `${meal.strMeal}`;
@@ -80,18 +79,20 @@ function createFoodCard(meal) {
     seeFoodInstructions.appendChild(foodInstructions);
     card1.className = `card1 card`;
     card1.appendChild(img1);
+    addBtn.className = 'add-btn';
+    addBtn.innerHTML = addPlus;
     unifiedDiv.className = "unified-div";
     unifiedDiv.appendChild(card1);
     unifiedDiv.appendChild(card2);
+    unifiedDiv.appendChild(addBtn);
     card2.appendChild(foodName);
     card2.appendChild(foodOrigins);
     card2.appendChild(foodIngredients);
     card2.appendChild(seeFoodInstructions);
     card2.className = `card2 card`;
-    unifiedDiv.appendChild(addToFavorites);
     part1.appendChild(unifiedDiv);
     moveToPage(seeFoodInstructions, meal, foodName);
-    addToFavorites.addEventListener("click", async function () {
+    addBtn.addEventListener("click", async function () {
         await fetch('/favourites-send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

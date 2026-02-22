@@ -10,6 +10,7 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
+const user_id = 1;
 
 const db = new pg.Client({
   user: process.env.USER,
@@ -84,7 +85,6 @@ app.get("/favourites-send", async (req, res) => {
 
 app.post("/favourites-send", async (req, res) => {
   const mealId = req.body.meal_id;
-  const user_id = 1;
 
   try {
     console.log(mealId);
@@ -98,6 +98,27 @@ app.post("/favourites-send", async (req, res) => {
     res.status(500).json({ message: 'Error adding meal to favorites' });
   }
 });
+
+
+app.delete("/remove-food/:id", async (req, res) => {
+
+  const mealId = req.params.id;
+
+  try {
+    await db.query(
+      "DELETE FROM favourite_recipes WHERE user_id = $1 AND meal_id = $2",
+      [user_id, mealId]
+    )
+
+    console.log(`Food N-${mealId} Successfully removed`);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.log(err);
+  }
+
+
+})
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

@@ -50,6 +50,8 @@ function displayFoodCards(meal: any) {
     const foodIngredients = document.createElement("p");
     const seeFoodInstructions = document.createElement("a");
     const foodInstructions = document.createElement("p");
+    const removeBtn = document.createElement("button");
+    const removeX = '<i class="fa-solid fa-xmark"></i>'
 
     const img1 = document.createElement('img');
     img1.src = meal.strMealThumb;
@@ -86,10 +88,16 @@ function displayFoodCards(meal: any) {
     card1.className = `card1 card`;
     card1.appendChild(img1);
 
+    removeBtn.className = 'remove-btn'
+    removeBtn.innerHTML = removeX;
+
     unifiedDiv.className = "unified-div";
+
+    
 
     unifiedDiv.appendChild(card1);
     unifiedDiv.appendChild(card2);
+    unifiedDiv.appendChild(removeBtn);
 
     card2.appendChild(foodName);
     card2.appendChild(foodOrigins);
@@ -100,13 +108,35 @@ function displayFoodCards(meal: any) {
     card1.className = `card1 card`;
     card1.appendChild(img1);
 
-    moveToPage(seeFoodInstructions, meal, foodName);
-
+    moveToPage(seeFoodInstructions, meal);
 
     cardsContainer?.appendChild(unifiedDiv);
+
+
+    removeBtn.addEventListener("click", async function() {
+      try {
+        const response = await fetch(`/remove-food/${meal.idMeal}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          unifiedDiv.remove();
+        } else {
+          console.log("Failed to delete meal")
+        }
+
+      } catch (err) {
+        console.log(err)
+      }
+    })
+
+
+
 }
 
-function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any, foodName: HTMLElement) { 
+function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any) { 
         seeFoodInstructions.addEventListener("click", function(e) {
 
         e.preventDefault();
