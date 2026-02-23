@@ -1,12 +1,11 @@
 const cards = document.querySelector(".cards");
 const part1 = document.querySelector(".part1");
-const search_btn = document.getElementById("search-btn");
-const add_btn = document.getElementById("add-btn");
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
+        part1.innerHTML = '';
         getData(query);
         console.log(query);
     }
@@ -15,6 +14,7 @@ searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const query = searchInput.value.trim();
         if (query) {
+            part1.innerHTML = '';
             getData(query);
             console.log(query);
         }
@@ -91,7 +91,7 @@ function createFoodCard(meal) {
     card2.appendChild(seeFoodInstructions);
     card2.className = `card2 card`;
     part1.appendChild(unifiedDiv);
-    moveToPage(seeFoodInstructions, meal, foodName);
+    moveToPage(seeFoodInstructions, meal);
     addBtn.addEventListener("click", async function () {
         await fetch('/favourites-send', {
             method: 'POST',
@@ -100,7 +100,7 @@ function createFoodCard(meal) {
         });
     });
 }
-export function moveToPage(seeFoodInstructions, meal, foodName) {
+export function moveToPage(seeFoodInstructions, meal) {
     seeFoodInstructions.addEventListener("click", function (e) {
         e.preventDefault();
         window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
@@ -108,7 +108,4 @@ export function moveToPage(seeFoodInstructions, meal, foodName) {
         // console.log(foodName.textContent);
     });
 }
-add_btn.addEventListener("click", function () {
-    console.log("works");
-});
 //# sourceMappingURL=index.js.map

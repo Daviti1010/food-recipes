@@ -38,12 +38,6 @@
     width: 500px;
 }
 
-.js-card {
-    background-color: black;
-    width: 100px;
-    height: 100px;
-}
-
 img {
     width: 200px;
     height: 200px;
@@ -93,16 +87,6 @@ img {
     margin-top: 20px;
     cursor: pointer;
 }
-
-.add-to-favorites-btn {
-    padding: 10px;
-    background-color: lightcoral;
-    border: none;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-}
-
 
 .search-container {
     display: flex;

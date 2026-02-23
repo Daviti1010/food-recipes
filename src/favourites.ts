@@ -1,6 +1,29 @@
 
 const cardsContainer = document.querySelector('.cards') as HTMLDivElement;
 
+const searchInput = document.querySelector(".search-input") as HTMLInputElement;
+
+
+searchInput.addEventListener("input", () => {
+
+  const query = searchInput.value.toLocaleLowerCase().trim();
+
+  const cards = document.querySelectorAll('.unified-div');
+
+   cards.forEach(card => {
+        // Get the recipe name from the card
+        const recipeName = card.querySelector('.food-name')?.textContent?.toLowerCase() || '';
+        
+        // Show or hide based on match
+        if (recipeName.includes(query)) {
+            (card as HTMLElement).style.display = 'flex';
+        } else {
+            (card as HTMLElement).style.display = 'none';
+        }
+    });
+
+});
+
 async function gettingIdFromDB() {
     try {
       const response = await fetch("/favourites-send");
@@ -93,8 +116,6 @@ function displayFoodCards(meal: any) {
 
     unifiedDiv.className = "unified-div";
 
-    
-
     unifiedDiv.appendChild(card1);
     unifiedDiv.appendChild(card2);
     unifiedDiv.appendChild(removeBtn);
@@ -130,21 +151,19 @@ function displayFoodCards(meal: any) {
       } catch (err) {
         console.log(err)
       }
-    })
-
-
+    });
 
 }
 
 function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any) { 
-        seeFoodInstructions.addEventListener("click", function(e) {
+      seeFoodInstructions.addEventListener("click", function(e) {
 
-        e.preventDefault();
-        window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
-        ?id=${meal.idMeal}&name=${meal.strMeal}`;
+      e.preventDefault();
+      window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
+      ?id=${meal.idMeal}&name=${meal.strMeal}`;
 
-        // console.log(foodName.textContent);
-    })
+      // console.log(foodName.textContent);
+  })
 }
 
 gettingIdFromDB();

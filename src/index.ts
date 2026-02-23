@@ -1,15 +1,13 @@
 const cards = document.querySelector(".cards") as HTMLBodyElement;
 const part1 = document.querySelector(".part1") as HTMLBodyElement;
 
-const search_btn = document.getElementById("search-btn") as HTMLButtonElement;
-const add_btn = document.getElementById("add-btn") as HTMLButtonElement;
-
 const searchInput = document.querySelector('.search-input') as HTMLInputElement;
 const searchBtn = document.querySelector('.search-btn') as HTMLButtonElement;
 
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
+        part1.innerHTML = '';
         getData(query)
         console.log(query)
     }
@@ -19,19 +17,21 @@ searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const query = searchInput.value.trim();
         if (query) {
+            part1.innerHTML = '';
             getData(query)
-        console.log(query)
+            console.log(query)
         }
     }
 });
 
 
-
-// const food_instructions = document.querySelector(".food-instructions") as HTMLBodyElement;
-
-
 interface Food {
     strMeal: string;
+    idMeal: string;
+    [key: string]: string;
+    strMealThumb: string;
+    strInstructions: string;
+    strYoutube: string;
 }
 
 async function getData(food: string) {
@@ -40,7 +40,7 @@ async function getData(food: string) {
         const data = await response.json();
 
         if (data.meals && data.meals.length > 1) { 
-            data.meals.forEach((meal: any) => {
+            data.meals.forEach((meal: Food) => {
                 // console.log(meal);
                 createFoodCard(meal);
             });
@@ -59,7 +59,7 @@ async function getData(food: string) {
 
 // getData("pizza");
 
-function createFoodCard(meal: any) {
+function createFoodCard(meal: Food) {
 
     const card1 = document.createElement("div");
     const card2 = document.createElement("div");
@@ -125,7 +125,7 @@ function createFoodCard(meal: any) {
 
     part1.appendChild(unifiedDiv);
 
-    moveToPage(seeFoodInstructions, meal, foodName);
+    moveToPage(seeFoodInstructions, meal);
 
 
     addBtn.addEventListener("click", async function() {
@@ -138,7 +138,7 @@ function createFoodCard(meal: any) {
 
 }
 
-export function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any, foodName: HTMLElement) { 
+export function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: Food) { 
         seeFoodInstructions.addEventListener("click", function(e) {
 
         e.preventDefault();
@@ -150,9 +150,3 @@ export function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any, fo
 }
 
 
-
-
-
-add_btn.addEventListener("click", function() {
-  console.log("works");
-})

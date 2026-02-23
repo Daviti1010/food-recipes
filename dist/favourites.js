@@ -1,4 +1,20 @@
 const cardsContainer = document.querySelector('.cards');
+const searchInput = document.querySelector(".search-input");
+searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLocaleLowerCase().trim();
+    const cards = document.querySelectorAll('.unified-div');
+    cards.forEach(card => {
+        // Get the recipe name from the card
+        const recipeName = card.querySelector('.food-name')?.textContent?.toLowerCase() || '';
+        // Show or hide based on match
+        if (recipeName.includes(query)) {
+            card.style.display = 'flex';
+        }
+        else {
+            card.style.display = 'none';
+        }
+    });
+});
 async function gettingIdFromDB() {
     try {
         const response = await fetch("/favourites-send");
@@ -103,7 +119,7 @@ function moveToPage(seeFoodInstructions, meal) {
     seeFoodInstructions.addEventListener("click", function (e) {
         e.preventDefault();
         window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
-        ?id=${meal.idMeal}&name=${meal.strMeal}`;
+      ?id=${meal.idMeal}&name=${meal.strMeal}`;
         // console.log(foodName.textContent);
     });
 }

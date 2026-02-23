@@ -24,14 +24,6 @@
     padding-right: 10px;
 }
 
-part1 {
-    display: flex;
-    /* transition: 0.3s; */
-    justify-content: center;
-    margin-top: 70px;
-}
-
-
 .card1 {
     background-color: burlywood;
     height: 200px;
@@ -43,12 +35,6 @@ part1 {
     background-color: aquamarine;
     height: 200px;
     width: 500px;
-}
-
-.js-card {
-    background-color: black;
-    width: 100px;
-    height: 100px;
 }
 
 img {
@@ -124,4 +110,24 @@ img {
 
 .remove-btn:active {
     transform: scale(0.95);
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #3b82f6;
 }
