@@ -40,6 +40,10 @@ app.get("/favourites", (req, res) => {
   res.render("favourites.ejs");
 });
 
+app.get("/add-your-recipe", (req, res) => {
+  res.render("add-recipe.ejs")
+})
+
 app.get("/api-info/search/:food", async (req, res) => {
 
   const food = req.params.food;

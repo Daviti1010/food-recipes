@@ -131,3 +131,17 @@ img {
 .search-input:focus {
     border-color: #3b82f6;
 }
+
+#add-btn {
+    padding: 12px 30px;
+    background: #018d34;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#add-btn:hover {
+    background: #02b342;
+}
