@@ -1,4 +1,6 @@
 // function createMealCard() {
+// }
+// createMealCard();
 const cards = document.querySelector(".cards");
 let picDiv = document.createElement("div");
 let rightDiv = document.createElement("div");
@@ -47,11 +49,37 @@ upperDiv.appendChild(rightDiv);
 unifiedDiv.appendChild(upperDiv);
 unifiedDiv.appendChild(lowerDiv);
 cards?.appendChild(unifiedDiv);
-// }
-// createMealCard();
+const save_btn = document.getElementById("save-btn");
+save_btn?.addEventListener("click", async () => {
+    const file = input.files?.[0];
+    console.log(file);
+    if (!file) {
+        alert('Please select an image');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('name', nameInput.value);
+    formData.append('origin', originInput.value);
+    formData.append('ingredients', ingredientsInput.value);
+    formData.append('video', ytLinkInput.value);
+    formData.append('instructions', instructionsInput.value);
+    formData.append('image', file);
+    try {
+        const response = await fetch('/user-recipe/upload', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        console.log('Success:', data);
+    }
+    catch (err) {
+        console.error('Error:', err);
+    }
+});
 function addImage(input, inputDiv) {
-    inputDiv.addEventListener('click', () => {
+    inputDiv.addEventListener('click', (e) => {
         input.click();
+        e.stopPropagation();
     });
     input.addEventListener('change', () => {
         const file = input.files?.[0];
@@ -59,7 +87,7 @@ function addImage(input, inputDiv) {
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                console.log(e);
+                // console.log(e);
                 const img = document.createElement('img');
                 img.src = e.target?.result;
                 img.style.width = '300px';

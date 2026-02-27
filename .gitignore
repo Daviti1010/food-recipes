@@ -16,3 +16,5 @@ server.js.map
 user-recipe.d.ts
 user-recipe.d.ts.map
 user-recipe.js.map
+public/uploads/*
+!public/uploads/.gitkeep
