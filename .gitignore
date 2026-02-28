@@ -13,8 +13,11 @@ favourites.js.map
 index.js.map
 instructions.js.map
 server.js.map
-user-recipe.d.ts
-user-recipe.d.ts.map
-user-recipe.js.map
 public/uploads/*
 !public/uploads/.gitkeep
+add-user-recipe.d.ts
+add-user-recipe.d.ts.map
+add-user-recipe.js.map
+my-recipes.d.ts
+my-recipes.d.ts.map
+my-recipes.js.map

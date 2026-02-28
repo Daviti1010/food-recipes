@@ -4,7 +4,6 @@ import axios from 'axios';
 import pg from 'pg';
 import dotenv from 'dotenv';
 import multer from 'multer';
-import path from "node:path";
 
 dotenv.config();
 
@@ -56,7 +55,11 @@ app.get("/favourites", (req, res) => {
 });
 
 app.get("/add-your-recipe", (req, res) => {
-  res.render("add-recipe.ejs")
+  res.render("add-user-recipe.ejs")
+});
+
+app.get("/my-recipes", (req, res) => {
+  res.render("my-recipes.ejs");
 })
 
 app.get("/api-info/search/:food", async (req, res) => {
@@ -147,17 +150,39 @@ app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
         return res.status(400).json({ error: 'No image uploaded' });
     }
 
-    const imageUrl = '/uploads/' + req.file.filename;
-    
-    await db.query(
-        'INSERT INTO user_recipes (user_id, name, origin, ingredients, video, instructions, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-        [user_id, name, origin, ingredients, video, instructions, imageUrl]
-    );
-    
-    res.json({ success: true });
-});
+    try {
+      const imageUrl = '/uploads/' + req.file.filename;
+      
+      await db.query(
+          'INSERT INTO user_recipes (user_id, name, origin, ingredients, video, instructions, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+          [user_id, name, origin, ingredients, video, instructions, imageUrl]
+      );
+      
+      res.json({ success: true });
+      console.log("Recipe successfully added to database!")
+
+  } catch (err) {
+    console.log(err)
+  }
+  });
+
+
+
+app.get("/my-recipes-send", async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM user_recipes");
+    res.json(result.rows);
+    // console.log(result.rows);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error retrieving user meals' });
+  }
+})
+
 
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
