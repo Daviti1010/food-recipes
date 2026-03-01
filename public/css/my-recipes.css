@@ -50,3 +50,57 @@ header {
 .header-container a:hover::after {
   width: 100%;
 }
+
+/* ///////////////// */
+
+
+.unified-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.card1 {
+  background-color: burlywood;
+  width: 200px;
+  height: 200px;
+}
+
+.card2 {
+  background-color: aquamarine;
+  height: 200px;
+  width: 500px;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+}
+
+.food-name {
+  font-size: 18px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.food-origins {
+  font-size: 14px;
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.food-ingredients {
+  font-size: 14px;
+  margin-top: 15px;
+  margin-left: 10px;
+  padding-right: 5px;
+}
+
+.food-instructions {
+  font-size: 16px;
+  margin-left: 10px;
+  text-decoration: underline;
+  color: black;
+  margin-top: 20px;
+  cursor: pointer;
+}

@@ -160,7 +160,7 @@ function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any) {
 
       e.preventDefault();
       window.location.href = `/instructions/${meal.strMeal.replace(/\s+/g, '-').toLowerCase()}
-      ?id=${meal.idMeal}&name=${meal.strMeal}`;
+      ?from=favourites&id=${meal.idMeal}&name=${meal.strMeal}`;
 
       // console.log(foodName.textContent);
   })
