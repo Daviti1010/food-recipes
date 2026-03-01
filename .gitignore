@@ -21,3 +21,4 @@ add-user-recipe.js.map
 my-recipes.d.ts
 my-recipes.d.ts.map
 my-recipes.js.map
+dist/
