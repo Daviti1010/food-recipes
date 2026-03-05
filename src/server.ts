@@ -121,8 +121,12 @@ app.get("/api-info/lookup/:id", async (req, res) => {
 
 
 app.get("/favourites-send", async (req, res) => {
+  const userId = req.session.userId;
+
   try {
-    const result = await db.query("SELECT * FROM favourite_recipes");
+    const result = await db.query("SELECT * FROM app_favourite_recipes WHERE user_id = $1",
+      [userId]
+    );
     res.json(result.rows);
     // console.log(result.rows);
 
@@ -136,11 +140,12 @@ app.get("/favourites-send", async (req, res) => {
 
 app.post("/favourites-send", async (req, res) => {
   const mealId = req.body.meal_id;
+  const userId = req.session.userId;
 
   try {
-    console.log(mealId);
+    // console.log(mealId);
     
-    await db.query('INSERT INTO favourite_recipes (user_id, meal_id) VALUES ($1, $2)', [user_id, mealId]);
+    await db.query('INSERT INTO app_favourite_recipes (user_id, meal_id) VALUES ($1, $2)', [userId, mealId]);
     res.status(200).json({ message: 'Meal added to favorites' });
     
 
@@ -154,11 +159,12 @@ app.post("/favourites-send", async (req, res) => {
 app.delete("/remove-food/:id", async (req, res) => {
 
   const mealId = req.params.id;
+  const userId = req.session.userId;
 
   try {
     await db.query(
-      "DELETE FROM favourite_recipes WHERE user_id = $1 AND meal_id = $2",
-      [user_id, mealId]
+      "DELETE FROM app_favourite_recipes WHERE user_id = $1 AND meal_id = $2",
+      [userId, mealId]
     )
 
     console.log(`Food N-${mealId} Successfully removed`);
@@ -174,6 +180,7 @@ app.delete("/remove-food/:id", async (req, res) => {
 
 app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
     const { name, origin, ingredients, video, instructions } = req.body;
+    const userId = req.session.userId;
     
     if (!req.file) {
         return res.status(400).json({ error: 'No image uploaded' });
@@ -183,8 +190,8 @@ app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
       const imageUrl = '/uploads/' + req.file.filename;
       
       await db.query(
-          'INSERT INTO user_recipes (user_id, name, origin, ingredients, video, instructions, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-          [user_id, name, origin, ingredients, video, instructions, imageUrl]
+          'INSERT INTO app_user_recipes (user_id, name, origin, ingredients, video, instructions, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+          [userId, name, origin, ingredients, video, instructions, imageUrl]
       );
       
       res.json({ success: true });
@@ -196,10 +203,13 @@ app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
   });
 
 
-
 app.get("/my-recipes-send", async (req, res) => {
+  const userId = req.session.userId;
+
   try {
-    const result = await db.query("SELECT * FROM user_recipes");
+    const result = await db.query("SELECT * FROM app_user_recipes WHERE user_id = $1",
+      [userId]
+    );
     res.json(result.rows);
     // console.log(result.rows);
 
