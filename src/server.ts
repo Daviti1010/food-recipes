@@ -5,7 +5,10 @@ import pg from 'pg';
 import dotenv from 'dotenv';
 import multer from 'multer';
 
+
 dotenv.config();
+
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -61,6 +64,15 @@ app.get("/add-your-recipe", (req, res) => {
 app.get("/my-recipes", (req, res) => {
   res.render("my-recipes.ejs");
 })
+
+app.get("/register", (req, res) => {
+  res.render("register.ejs")
+})
+
+app.get("/login", (req, res) => {
+  res.render("login.ejs")
+})
+
 
 app.get("/api-info/search/:food", async (req, res) => {
 
@@ -179,6 +191,7 @@ app.get("/my-recipes-send", async (req, res) => {
     res.status(500).json({ message: 'Error retrieving user meals' });
   }
 })
+
 
 
 
