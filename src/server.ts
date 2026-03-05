@@ -4,10 +4,18 @@ import axios from 'axios';
 import pg from 'pg';
 import dotenv from 'dotenv';
 import multer from 'multer';
-
+import bcrypt from "bcrypt";
+import session from "express-session";
 
 dotenv.config();
 
+const salt_rounds = 10;
+
+declare module "express-session" {
+  interface SessionData {
+    userId?: number;
+  }
+}
 
 
 const storage = multer.diskStorage({
@@ -44,6 +52,15 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use('/dist', express.static('dist'));
+
+app.use(session({
+  secret: process.env.SECRET_KEY!,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: false,
+  }
+}));
 
 app.get("/", (req, res) => {
     res.render("index.ejs");
@@ -192,6 +209,88 @@ app.get("/my-recipes-send", async (req, res) => {
   }
 })
 
+app.post("/register", async (req, res) => {
+
+    const email = req.body.email;
+    const password = req.body.password1;
+
+    try {
+      console.log(email)
+      console.log(password)
+
+    const checkResult = await db.query(
+      "SELECT * FROM user_info WHERE email = $1", 
+      [email]
+    );
+    
+    if (checkResult.rows.length > 0) {
+      return res.send("Email already exists. Try logging in.");
+    }
+
+    const hash = await bcrypt.hash(password, salt_rounds);
+
+    console.log("Hashed Password:", hash);
+
+    const result = await db.query(
+      "INSERT INTO user_info (email, password) VALUES ($1, $2) RETURNING user_id",
+      [email, hash]
+    );
+
+      const newUserId = result.rows[0].user_id;
+      req.session.userId = newUserId;
+      
+      console.log(`User registered with ID: ${newUserId}`);
+
+      res.redirect("/");
+
+    } catch (err) {
+      console.log(err);
+    }
+})
+
+
+app.post("/login", async (req, res) => {
+
+  const email = req.body.email;
+  const loginPassword = req.body.password;
+
+  try {
+    const result = await db.query("SELECT * FROM user_info WHERE email = $1", [
+      email,
+    ]);
+
+    if (result.rows.length === 0) {
+      return res.send("User not found");
+    }
+
+    const user = result.rows[0];
+    const storedHashedPassword = user.password;
+
+    // console.log(email);
+    const isMatch = await bcrypt.compare(loginPassword, storedHashedPassword);
+
+    if (isMatch) {
+      req.session.userId = user.user_id;
+      
+      console.log("Login successful, user ID:", req.session.userId);
+      
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send("Login error");
+        }
+        res.redirect("/");
+      });
+    } else {
+      res.send("Incorrect Password");
+    }
+    
+
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).send("Server error");
+  }
+})
 
 
 
