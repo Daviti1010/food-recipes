@@ -1,3 +1,9 @@
+// import {profileDropdown} from "index.ts";
+import {profileDropdown} from "profile-dropdown.ts";
+
+document.addEventListener('DOMContentLoaded', () => {
+    profileDropdown();
+});
 
 const cardsContainer = document.querySelector('.cards') as HTMLDivElement;
 
@@ -167,5 +173,4 @@ function moveToPage(seeFoodInstructions: HTMLAnchorElement, meal: any) {
 }
 
 gettingIdFromDB();
-
 

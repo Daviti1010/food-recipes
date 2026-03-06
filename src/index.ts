@@ -1,8 +1,13 @@
-const cards = document.querySelector(".cards") as HTMLBodyElement;
+import {profileDropdown} from "profile-dropdown.ts";
+
 const part1 = document.querySelector(".part1") as HTMLBodyElement;
 
 const searchInput = document.querySelector('.search-input') as HTMLInputElement;
 const searchBtn = document.querySelector('.search-btn') as HTMLButtonElement;
+
+document.addEventListener('DOMContentLoaded', () => {
+    profileDropdown();
+});
 
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();

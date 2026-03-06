@@ -1,5 +1,10 @@
-const cards = document.querySelector(".cards") as HTMLDivElement;
+import {profileDropdown} from "profile-dropdown.ts";
 
+document.addEventListener('DOMContentLoaded', () => {
+    profileDropdown();
+});
+
+const cards = document.querySelector(".cards") as HTMLDivElement;
 
 async function loadRecipes() {
     try {

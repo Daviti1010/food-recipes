@@ -9,6 +9,8 @@ header {
 }
 
 .header-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 20px;
@@ -20,6 +22,7 @@ header {
   align-items: center;
   gap: 40px;
   list-style: none;
+  grid-column: 2;
 }
 
 .header-container a {
@@ -48,6 +51,95 @@ header {
 
 .header-container a:hover::after {
   width: 100%;
+}
+
+.profile-dropdown {
+    position: relative;
+    display: grid;
+}
+
+.profile-icon {
+    grid-column: 3;
+    font-size: 28px;
+    color: #334155;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.profile-icon:hover {
+    color: #3b82f6;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 12px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    min-width: 220px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* .dropdown-header #user-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 15px;
+} */
+
+.dropdown-header #user-email {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    text-decoration: none;
+    color: #334155;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background: #f1f5f9;
+}
+
+.dropdown-menu hr {
+    margin: 8px 0;
+    border: none;
+    border-top: 1px solid #e2e8f0;
+}
+
+.dropdown-menu #logout-btn {
+    color: #ef4444;
+    font-weight: 500;
+}
+
+.dropdown-menu #logout-btn:hover {
+    background: #fee2e2;
 }
 
 /* ///////////////////// */

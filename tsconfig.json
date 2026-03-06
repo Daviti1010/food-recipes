@@ -18,12 +18,14 @@
 
     // Other Outputs
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    "declaration": false,
+    "declarationMap": false,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
 
     // Style Options
     // "noImplicitReturns": true,
@@ -45,5 +47,5 @@
   },
   
   "include": ["src/**/*"],
-    "exclude": ["src/server.ts", "node_modules"]
+    "exclude": ["src/server.ts", "node_modules", "dist", "**/*.d.ts"]
 }

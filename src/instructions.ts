@@ -1,8 +1,13 @@
+import {profileDropdown} from "profile-dropdown.ts";
 
 const params = new URLSearchParams(window.location.search);
 const mealName = params.get('name');
 const fromPage = params.get('from');
 // console.log(fromPage);
+
+document.addEventListener('DOMContentLoaded', () => {
+    profileDropdown();
+});
 
 interface ApiMeal {
     meals: Array<{

@@ -71,7 +71,12 @@ app.get("/instructions/:food", (req, res) => {
 });
 
 app.get("/favourites", (req, res) => {
+  const userId = req.session.userId;
+  if (userId) {
   res.render("favourites.ejs");
+  } else {
+    res.send("You must log in or register to access favourite recipes!")
+  }
 });
 
 app.get("/add-your-recipe", (req, res) => {
@@ -79,7 +84,12 @@ app.get("/add-your-recipe", (req, res) => {
 });
 
 app.get("/my-recipes", (req, res) => {
-  res.render("my-recipes.ejs");
+  const userId = req.session.userId;
+  if (userId) {
+    res.render("my-recipes.ejs");
+  } else {
+    res.send("You must log in or register to access your recipes!")
+  }
 })
 
 app.get("/register", (req, res) => {
@@ -302,6 +312,16 @@ app.post("/login", async (req, res) => {
   }
 })
 
+app.post('/api/auth/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to logout' });
+        }
+        
+        res.clearCookie('connect.sid');
+        res.json({ success: true, message: 'Logged out successfully' });
+    });
+});
 
 
 app.listen(port, () => {
