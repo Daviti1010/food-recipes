@@ -1,7 +1,24 @@
-export function profileDropdown() {
+export async function profileDropdown() {
+
+    const response = await fetch(`/api/current-user`);
+    const data = await response.json();
+    const userId = data.userId;
+    // console.log(userId);
+    
+
     const profileIcon = document.getElementById('profile-btn') as HTMLDivElement;
     const dropdownMenu = document.getElementById('dropdown-menu') as HTMLDivElement;
+    const dropdownHeader = document.getElementById("dropdown-header") as HTMLDivElement;
+    const dropdownMiddle = document.querySelector('.dropdown-middle') as HTMLDivElement;
     const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement;
+    const loginBtn = document.getElementById('login-btn') as HTMLButtonElement;
+
+    if (userId === null) {
+        dropdownHeader.style.display = 'none';
+        dropdownMiddle.style.display = 'none';
+    } else {
+        loginBtn.style.display = 'none';
+    }
     
     if (!profileIcon || !dropdownMenu) return;
     
@@ -9,7 +26,8 @@ export function profileDropdown() {
         e.stopPropagation();
         dropdownMenu.classList.toggle('show');
     });
-    
+
+    // closing dropdown when clicking somewhere else
     document.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
         if (!profileIcon.contains(target) && !dropdownMenu.contains(target)) {
@@ -23,12 +41,13 @@ export function profileDropdown() {
             dropdownMenu.classList.remove('show');
         });
     });
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            window.location.href = '/login';
+        })
+    }
     
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            dropdownMenu.classList.remove('show');
-        }
-    });
     
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {

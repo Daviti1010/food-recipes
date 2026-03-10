@@ -1,6 +1,8 @@
-// function createMealCard() {
-// }
-// createMealCard();
+import {profileDropdown} from "./profile-dropdown.js";
+
+document.addEventListener('DOMContentLoaded', () => {
+    profileDropdown();
+});
 
 const cards = document.querySelector(".cards");
 

@@ -63,11 +63,14 @@ header {
     grid-column: 3;
     font-size: 28px;
     color: #334155;
-    cursor: pointer;
     transition: color 0.3s;
 }
 
-.profile-icon:hover {
+.profile-icon i{
+    cursor: pointer;
+}
+
+.profile-icon i:hover {
     color: #3b82f6;
 }
 
@@ -141,6 +144,15 @@ header {
 
 .dropdown-menu #logout-btn:hover {
     background: #fee2e2;
+}
+
+.dropdown-menu #login-btn {
+    color: #34b804;
+    font-weight: 500;
+}
+
+.dropdown-menu #login-btn:hover {
+    background: #c4f3b8;
 }
 
 /* //////////////////// */

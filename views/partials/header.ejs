@@ -8,18 +8,21 @@
 
         <div class="profile-dropdown">
             <div class="profile-icon" id="profile-btn"> 
-                <i class="fa-regular fa-circle-user"></i> 
+                <i class="fa-regular fa-circle-user icon"></i> 
             </div>
             
             <div class="dropdown-menu" id="dropdown-menu">
-                <div class="dropdown-header">
+                <div class="dropdown-header" id="dropdown-header">
                     <!-- <span id="user-name">John Doe</span> -->
                     <span id="user-email">john@example.com</span>
                 </div>
-                <hr>
-                <a href="/">My Profile</a>
-                <hr>
-                <button id="logout-btn">Logout</button>
+                <div class="dropdown-middle">
+                    <hr>
+                    <a href="/">My Profile</a>
+                    <hr>
+                    <button id="logout-btn">Logout</button>
+                </div>
+                <button id="login-btn">Log In</button>
             </div>
         </div>
     </div>

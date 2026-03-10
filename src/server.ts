@@ -35,7 +35,7 @@ const upload = multer({
 const app = express();
 const port = 3000;
 
-const user_id = 1;
+
 
 const db = new pg.Client({
   user: process.env.USER,
@@ -63,7 +63,7 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => {
-    res.render("index.ejs");
+  res.render("index.ejs");
 });
 
 app.get("/instructions/:food", (req, res) => {
@@ -73,14 +73,19 @@ app.get("/instructions/:food", (req, res) => {
 app.get("/favourites", (req, res) => {
   const userId = req.session.userId;
   if (userId) {
-  res.render("favourites.ejs");
+    res.render("favourites.ejs");
   } else {
     res.send("You must log in or register to access favourite recipes!")
   }
 });
 
 app.get("/add-your-recipe", (req, res) => {
-  res.render("add-user-recipe.ejs")
+  const userId = req.session.userId;
+  if (userId) {
+    res.render("add-user-recipe.ejs")
+  } else {
+    res.send("You must log in or register to access this page!")
+  }
 });
 
 app.get("/my-recipes", (req, res) => {
@@ -98,6 +103,14 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.render("login.ejs")
+})
+
+app.get("/api/current-user", (req, res) => {
+  if (req.session.userId) {
+    res.json({userId: req.session.userId})
+  } else {
+    res.json({userId: null})
+  }
 })
 
 

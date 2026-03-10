@@ -1,4 +1,4 @@
-import {profileDropdown} from "profile-dropdown.ts";
+import {profileDropdown} from "./profile-dropdown.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     profileDropdown();

@@ -1,4 +1,4 @@
-import {profileDropdown} from "profile-dropdown.ts";
+import {profileDropdown} from "./profile-dropdown.js";
 
 const part1 = document.querySelector(".part1") as HTMLBodyElement;
 

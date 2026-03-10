@@ -1,4 +1,4 @@
-import {profileDropdown} from "profile-dropdown.ts";
+import {profileDropdown} from "./profile-dropdown.js";
 
 const params = new URLSearchParams(window.location.search);
 const mealName = params.get('name');
@@ -30,11 +30,12 @@ interface UserRecipe {
 }
 
 
-if (fromPage === 'favourites' && mealName) {
-    fetchMealInstructions(mealName);
-} else {
+if (fromPage === 'my_recipes') {
     getUserRecipeInstructions();
+} else {
+    fetchMealInstructions(mealName);
 }
+
 
 function getUserRecipeInstructions() {
     const recipeString = localStorage.getItem('currentRecipe');
@@ -75,7 +76,18 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     const instructions = document.createElement('p');
     const unified_div = document.createElement('div');
 
-    if (fromPage === 'favourites') {
+    if (fromPage === 'my_recipes') {
+        const userData = data as UserRecipe;
+        // console.log(fromPage);
+        // console.log(data);
+        foodName.textContent = userData.name;
+        foodOrigin.textContent = `Origin: ${userData.origin}`;
+        foodIngredients.textContent = `Ingredients: ${userData.ingredients}`;
+        videoYT_A.href = userData.video;
+        img.src = userData.image_url;
+        instructions.textContent = userData.instructions;
+
+    } else {
         const apiData = data as ApiMeal;
         const meal = apiData.meals[0]!;
         // console.log(meal)
@@ -102,17 +114,6 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
         } else {
             foodIngredients.textContent = 'Ingredients: ' + ingredients.join(', ');
         }
-
-    } else {
-        const userData = data as UserRecipe;
-        // console.log(fromPage);
-        // console.log(data);
-        foodName.textContent = userData.name;
-        foodOrigin.textContent = `Origin: ${userData.origin}`;
-        foodIngredients.textContent = `Ingredients: ${userData.ingredients}`;
-        videoYT_A.href = userData.video;
-        img.src = userData.image_url;
-        instructions.textContent = userData.instructions;
     }
 
 
