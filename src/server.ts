@@ -63,7 +63,7 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  res.render("search.ejs");
 });
 
 app.get("/instructions/:food", (req, res) => {
