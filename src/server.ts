@@ -109,11 +109,30 @@ app.get("/login", (req, res) => {
     return res.redirect('/');
   }
   res.render('login.ejs');
+});
+
+app.get("/new-password", (req, res) => {
+  res.render('forgot-password.ejs');
 })
 
-app.get("/api/current-user", (req, res) => {
+app.get("/api/current-user", async (req, res) => {
   if (req.session.userId) {
-    res.json({userId: req.session.userId})
+    // res.json({userId: req.session.userId})
+    try {
+     const result = await db.query('SELECT user_id, email FROM user_info WHERE user_id = $1',
+        [req.session.userId]);
+
+      const user = result.rows[0];
+      console.log(user);
+
+      res.json({
+        userId: user.user_id,
+        email: user.email
+      })
+
+    } catch (err) {
+      console.log(err);
+    }
   } else {
     res.json({userId: null})
   }
@@ -330,6 +349,36 @@ app.post("/login", async (req, res) => {
     res.status(500).send("Server error");
   }
 })
+
+app.post("/new-password", async (req, res) => {
+  const email = req.body.email;
+  const newPassword = req.body.password1;
+  const hash = await bcrypt.hash(newPassword, salt_rounds);
+
+  console.log(email + ", " + newPassword)
+
+  try {
+    const checkResult = await db.query("SELECT * FROM user_info WHERE email = $1", [
+      email,
+    ]);
+
+    if (checkResult.rows.length === 0) {
+      return res.send("User not found");
+    } else {
+      const result = await db.query(`UPDATE user_info SET password = $1 WHERE email = $2`, [
+        hash, email
+      ]);
+      console.log("Password Successfully Changed!")
+      res.redirect("/login");
+    }
+
+    const user = checkResult.rows[0];
+    console.log(user);
+
+  } catch (err) {
+    console.log("Error: " + err);
+  }
+});
 
 app.post('/api/auth/logout', (req, res) => {
     req.session.destroy((err) => {

@@ -3,8 +3,12 @@ export async function profileDropdown() {
     const response = await fetch(`/api/current-user`);
     const data = await response.json();
     const userId = data.userId;
+    const email = data.email;
+
     // console.log(userId);
-    
+
+    const dropdownEmail = document.getElementById("user-email") as HTMLSpanElement;
+    dropdownEmail.textContent = email;
 
     const profileIcon = document.getElementById('profile-btn') as HTMLDivElement;
     const dropdownMenu = document.getElementById('dropdown-menu') as HTMLDivElement;
