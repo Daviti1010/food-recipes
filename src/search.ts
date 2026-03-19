@@ -1,12 +1,15 @@
 import {profileDropdown} from "./profile-dropdown.js";
 
+let userID: number | null = null;
+
 const part1 = document.querySelector(".part1") as HTMLBodyElement;
 
 const searchInput = document.querySelector('.search-input') as HTMLInputElement;
 const searchBtn = document.querySelector('.search-btn') as HTMLButtonElement;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     profileDropdown();
+    await getUserId();
 });
 
 searchBtn.addEventListener('click', () => {
@@ -28,6 +31,21 @@ searchInput.addEventListener('keypress', (e) => {
         }
     }
 });
+
+async function getUserId() {
+    try {
+        const response = await fetch('/api/current-user', {
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+        userID = data.userId;
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
 
 
 interface Food {
@@ -64,7 +82,7 @@ async function getData(food: string) {
 
 // getData("pizza");
 
-function createFoodCard(meal: Food) {
+async function createFoodCard(meal: Food) {
 
     const card1 = document.createElement("div");
     const card2 = document.createElement("div");
@@ -115,6 +133,11 @@ function createFoodCard(meal: Food) {
 
     addBtn.className = 'add-btn'
     addBtn.innerHTML = addPlus;
+
+    if (userID === null) {
+        addBtn.style.display = 'none';
+    }
+
 
     unifiedDiv.className = "unified-div";
 

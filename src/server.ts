@@ -98,11 +98,17 @@ app.get("/my-recipes", (req, res) => {
 })
 
 app.get("/register", (req, res) => {
-  res.render("register.ejs")
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
+  res.render('register.ejs');
 })
 
 app.get("/login", (req, res) => {
-  res.render("login.ejs")
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
+  res.render('login.ejs');
 })
 
 app.get("/api/current-user", (req, res) => {
