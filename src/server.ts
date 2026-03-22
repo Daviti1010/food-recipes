@@ -270,7 +270,10 @@ app.get("/my-recipes-send", async (req, res) => {
 app.post("/register", async (req, res) => {
 
     const email = req.body.email;
-    const password = req.body.password1;
+    const password = req.body.password;
+
+    console.log("TEST: " + email);
+    console.log("TEST: " + password)
 
     try {
       console.log(email)
@@ -299,7 +302,10 @@ app.post("/register", async (req, res) => {
       
       console.log(`User registered with ID: ${newUserId}`);
 
-      res.redirect("/");
+      res.json({ 
+          success: true, 
+          user: result.rows[0] 
+      });
 
     } catch (err) {
       console.log(err);

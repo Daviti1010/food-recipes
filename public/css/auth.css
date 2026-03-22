@@ -105,3 +105,8 @@ button:hover {
 .toggle-password:hover {
     color: #333;
 }
+
+.error {
+    font-size: 13px;
+    color: red;
+}
