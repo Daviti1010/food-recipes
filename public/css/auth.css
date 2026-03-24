@@ -110,3 +110,10 @@ button:hover {
     font-size: 13px;
     color: red;
 }
+
+#message {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #00bb00;
+    font-size: 20px;
+}

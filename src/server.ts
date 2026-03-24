@@ -304,7 +304,7 @@ app.post("/register", async (req, res) => {
 
       res.json({ 
           success: true, 
-          user: result.rows[0] 
+          // user: result.rows[0] 
       });
 
     } catch (err) {
@@ -371,15 +371,16 @@ app.post("/new-password", async (req, res) => {
     if (checkResult.rows.length === 0) {
       return res.send("User not found");
     } else {
-      const result = await db.query(`UPDATE user_info SET password = $1 WHERE email = $2`, [
+      const result = await db.query(`UPDATE user_info SET password = $1 WHERE email = $2 RETURNING *`, [
         hash, email
       ]);
       console.log("Password Successfully Changed!")
-      res.redirect("/login");
+      console.log(result.rows[0])
+      res.json({ 
+        success: true
+      });
     }
 
-    const user = checkResult.rows[0];
-    console.log(user);
 
   } catch (err) {
     console.log("Error: " + err);
