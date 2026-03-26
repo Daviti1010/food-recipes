@@ -123,7 +123,7 @@ app.get("/api/current-user", async (req, res) => {
         [req.session.userId]);
 
       const user = result.rows[0];
-      console.log(user);
+      // console.log(user);
 
       res.json({
         userId: user.user_id,
@@ -222,8 +222,27 @@ app.delete("/remove-food/:id", async (req, res) => {
     console.log(err);
   }
 
-})
+});
 
+app.delete("/remove-my-recipe/:id", async (req, res) => {
+
+  const mealId = req.params.id;
+  const userId = req.session.userId;
+
+  try {
+    await db.query(
+      "DELETE FROM app_user_recipes WHERE user_id = $1 AND meal_id = $2",
+      [userId, mealId]
+    )
+
+    // console.log(`Food N-${mealId} Successfully removed`);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
 
 
 app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
@@ -272,8 +291,8 @@ app.post("/register", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    console.log("TEST: " + email);
-    console.log("TEST: " + password)
+    // console.log("TEST: " + email);
+    // console.log("TEST: " + password)
 
     try {
       console.log(email)
@@ -375,7 +394,7 @@ app.post("/new-password", async (req, res) => {
         hash, email
       ]);
       console.log("Password Successfully Changed!")
-      console.log(result.rows[0])
+      // console.log(result.rows[0])
       res.json({ 
         success: true
       });

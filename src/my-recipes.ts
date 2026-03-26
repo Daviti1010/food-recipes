@@ -2,7 +2,19 @@ import {profileDropdown} from "./profile-dropdown.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     profileDropdown();
+    loadRecipes();
 });
+
+interface recipe {
+    image_url: string;
+    ingredients: string;
+    instructions: string;
+    meal_id: number;
+    name: string;
+    origin: string;
+    user_id: number;
+    video: string
+}
 
 const searchInput = document.querySelector(".search-input") as HTMLInputElement;
 
@@ -48,10 +60,8 @@ async function loadRecipes() {
     }
 }
 
-loadRecipes();
 
-
-function createRecipeCards(recipe: any) {
+function createRecipeCards(recipe: recipe) {
     const card1 = document.createElement("div") as HTMLDivElement;
     const card2 = document.createElement("div") as HTMLDivElement;
     const foodName = document.createElement("h1") as HTMLHeadingElement;
@@ -59,6 +69,9 @@ function createRecipeCards(recipe: any) {
     const foodIngredients = document.createElement("p") as HTMLParagraphElement;
     const seeFoodInstructions = document.createElement("a") as HTMLAnchorElement;
     const foodInstructions = document.createElement("p") as HTMLParagraphElement;
+
+    const removeBtn = document.createElement("button");
+    const removeX = '<i class="fa-solid fa-xmark"></i>'
 
     foodName.textContent = recipe.name;
     foodName.className = 'food-name';
@@ -76,6 +89,9 @@ function createRecipeCards(recipe: any) {
     foodInstructions.className = 'food-instructions';
     seeFoodInstructions.appendChild(foodInstructions);
 
+    removeBtn.className = 'remove-btn'
+    removeBtn.innerHTML = removeX;
+
     const unifiedDiv = document.createElement("div") as HTMLDivElement;
 
     card1.className = 'card1 card';
@@ -91,14 +107,34 @@ function createRecipeCards(recipe: any) {
 
     unifiedDiv.appendChild(card1);
     unifiedDiv.appendChild(card2);
+    unifiedDiv.appendChild(removeBtn);
 
     cards.appendChild(unifiedDiv);
 
     moveToPage(seeFoodInstructions, recipe)
 
+    removeBtn.addEventListener("click", async function() {
+      try {
+        const response = await fetch(`/remove-my-recipe/${recipe.meal_id}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          unifiedDiv.remove();
+        } else {
+          console.log("Failed to delete meal")
+        }
+
+      } catch (err) {
+        console.log(err)
+      }
+    });
+
 }
 
-function moveToPage(seeFoodInstructions: HTMLAnchorElement, recipe: any) { 
+function moveToPage(seeFoodInstructions: HTMLAnchorElement, recipe: recipe) { 
       seeFoodInstructions.addEventListener("click", function(e) {
 
       e.preventDefault();
