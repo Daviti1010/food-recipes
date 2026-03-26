@@ -4,6 +4,29 @@ document.addEventListener('DOMContentLoaded', () => {
     profileDropdown();
 });
 
+const searchInput = document.querySelector(".search-input") as HTMLInputElement;
+
+
+searchInput.addEventListener("input", () => {
+
+  const query = searchInput.value.toLocaleLowerCase().trim();
+
+  const cards = document.querySelectorAll('.unified-div');
+
+   cards.forEach(card => {
+        // Get the recipe name from the card
+        const recipeName = card.querySelector('.food-name')?.textContent?.toLowerCase() || '';
+        
+        // Show or hide based on match
+        if (recipeName.includes(query)) {
+            (card as HTMLElement).style.display = 'flex';
+        } else {
+            (card as HTMLElement).style.display = 'none';
+        }
+    });
+
+});
+
 const cards = document.querySelector(".cards") as HTMLDivElement;
 
 async function loadRecipes() {

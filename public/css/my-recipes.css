@@ -143,6 +143,41 @@ header {
     background: #fee2e2;
 }
 
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #3b82f6;
+}
+
+#add-btn {
+    padding: 12px 30px;
+    background: #018d34;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#add-btn:hover {
+    background: #02b342;
+}
+
+
 /* ///////////////// */
 
 
