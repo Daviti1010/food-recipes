@@ -27,6 +27,7 @@ interface UserRecipe {
     video: string;
     image_url: string;
     instructions: string;
+    meal_id: number
 }
 
 
@@ -75,6 +76,7 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     const instructionsHeader = document.createElement('h2');
     const instructions = document.createElement('p');
     const unified_div = document.createElement('div');
+    const editRecipe = document.createElement("button");
 
     if (fromPage === 'my_recipes') {
         const userData = data as UserRecipe;
@@ -86,6 +88,20 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
         videoYT_A.href = userData.video;
         img.src = userData.image_url;
         instructions.textContent = userData.instructions;
+
+        const penIcon = document.createElement("i");
+        const text = document.createTextNode(" Edit");
+
+        editRecipe.className = 'edit-recipe';
+        penIcon.classList.add("fa-solid", "fa-pen");
+
+        editRecipe.appendChild(penIcon);
+        editRecipe.appendChild(text);
+
+        editRecipe.addEventListener("click", () => {
+            window.location.href = `/edit-recipe?meal_id=${userData.meal_id}`
+            // console.log(userData)
+        })
 
     } else {
         const apiData = data as ApiMeal;
@@ -100,6 +116,7 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
         instructions.textContent = meal.strInstructions;
         instructions.innerHTML = meal.strInstructions.replace(/\n/g, '<br>');
 
+        editRecipe.style.display = 'none';
 
         for (let i = 1; i <= 20; i++) {
             const ingredient = meal[`strIngredient${i}`];
@@ -136,6 +153,7 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     right_div.appendChild(foodOrigin);
     right_div.appendChild(foodIngredients);
     right_div.appendChild(videoYT_A);
+    right_div.appendChild(editRecipe);
 
     upper_div.className = 'upper-div';
 

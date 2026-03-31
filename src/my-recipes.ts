@@ -46,7 +46,7 @@ async function loadRecipes() {
         const response = await fetch('/my-recipes-send');
         const recipes = await response.json();
 
-        recipes.forEach((recipe: any) => {
+        recipes.forEach((recipe: recipe) => {
             createRecipeCards(recipe);
             console.log(recipe);
         })
@@ -131,7 +131,6 @@ function createRecipeCards(recipe: recipe) {
         console.log(err)
       }
     });
-
 }
 
 function moveToPage(seeFoodInstructions: HTMLAnchorElement, recipe: recipe) { 
@@ -140,7 +139,7 @@ function moveToPage(seeFoodInstructions: HTMLAnchorElement, recipe: recipe) {
       e.preventDefault();
       localStorage.setItem('currentRecipe', JSON.stringify(recipe));
       window.location.href = `/instructions/${recipe.name.replace(/\s+/g, '-').toLowerCase()}
-      ?from=my_recipes&name=${recipe.name}`;
+      ?meal_id=${recipe.meal_id}&from=my_recipes&name=${recipe.name}`;
 
   })
 }

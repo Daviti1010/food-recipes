@@ -97,6 +97,15 @@ app.get("/my-recipes", (req, res) => {
   }
 })
 
+app.get("/edit-recipe", (req, res) => {
+  const userId = req.session.userId;
+  if (userId) {
+    res.render("edit-recipe.ejs")
+  } else {
+    res.send("You must log in or register to access this page!")
+  }
+})
+
 app.get("/register", (req, res) => {
   if (req.session.userId) {
     return res.redirect('/');
@@ -267,7 +276,7 @@ app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
   } catch (err) {
     console.log(err)
   }
-  });
+})
 
 
 app.get("/my-recipes-send", async (req, res) => {
@@ -285,6 +294,66 @@ app.get("/my-recipes-send", async (req, res) => {
     res.status(500).json({ message: 'Error retrieving user meals' });
   }
 })
+
+app.get("/api/recipes/:id", async (req, res) => {
+  const userId = req.session.userId;
+  const mealId = req.params.id;
+
+  try {
+      const check = await db.query(
+          'SELECT * FROM app_user_recipes WHERE user_id = $1 AND meal_id = $2',
+          [userId, mealId]
+      );
+      
+      if (check.rows.length === 0) {
+          return res.status(403).json({ success: false, error: 'Not authorized' });
+      }
+    res.json(check.rows);
+    console.log(check.rows[0]);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error retrieving user meals' });
+  }
+})
+
+app.put('/api/recipes/:id', upload.single('image'), async (req, res) => {
+    const { name, origin, ingredients, video, instructions } = req.body;
+    const userId = req.session.userId;
+    const mealId = req.params.id;
+  
+    try {
+      let imageUrl;
+
+      if (req.file) {
+          imageUrl = `/uploads/${req.file.filename}`;
+      } else if (req.body.image_url) {
+          imageUrl = req.body.image_url;
+      } else {
+          return res.status(400).json({ error: 'No image provided' });
+      }
+
+        const check = await db.query(
+            'SELECT * FROM app_user_recipes WHERE user_id = $1 AND meal_id = $2',
+            [userId, mealId]
+        );
+        
+        if (check.rows.length === 0) {
+            return res.status(403).json({ success: false, error: 'Not authorized' });
+        }
+
+        const result = await db.query(
+            'UPDATE app_user_recipes SET name = $1, origin = $2, ingredients = $3, video = $4, instructions = $5, image_url = $6 WHERE user_id = $7 AND meal_id = $8 RETURNING *',
+            [name, origin, ingredients, video, instructions, imageUrl, userId, mealId]
+        );
+        
+        res.json({ success: true, recipe: result.rows[0] });
+
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, error: 'Update failed' });
+  }
+});
 
 app.post("/register", async (req, res) => {
 
