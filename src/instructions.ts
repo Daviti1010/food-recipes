@@ -77,6 +77,7 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     const instructions = document.createElement('p');
     const unified_div = document.createElement('div');
     const editRecipe = document.createElement("button");
+    const ratingSystem = document.createElement("div");
 
     if (fromPage === 'my_recipes') {
         const userData = data as UserRecipe;
@@ -118,6 +119,70 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
 
         editRecipe.style.display = 'none';
 
+        ratingSystem.id = 'rating-system';
+
+        const star1 = document.createElement("span");
+        const star2 = document.createElement("span");
+        const star3 = document.createElement("span");
+        const star4 = document.createElement("span");
+        const star5 = document.createElement("span");
+        const ratingButton = document.createElement("button");
+
+        star1.innerHTML = '<i class="fa-solid fa-star star1"></i>'
+        star2.innerHTML = '<i class="fa-solid fa-star star2"></i>'
+        star3.innerHTML = '<i class="fa-solid fa-star star3"></i>'
+        star4.innerHTML = '<i class="fa-solid fa-star star4"></i>'
+        star5.innerHTML = '<i class="fa-solid fa-star star5"></i>'
+        ratingButton.id = 'rating-button';
+        ratingButton.textContent = 'Submit';
+        
+        ratingSystem.appendChild(star1);
+        ratingSystem.appendChild(star2);
+        ratingSystem.appendChild(star3);
+        ratingSystem.appendChild(star4);
+        ratingSystem.appendChild(star5);
+        ratingSystem.appendChild(ratingButton);
+
+        const stars = [star1, star2, star3, star4, star5];
+
+        let selectedRating = 0;
+
+        stars.forEach((star, index) => {
+
+            star.addEventListener("mouseenter", () => {
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.style.color = "orange";
+                    } else {
+                        s.style.color = "black";
+                    }
+                });
+            });
+
+            star.addEventListener("mouseleave", () => {
+                stars.forEach((s, i) => {
+                    if (i < selectedRating) {
+                        s.style.color = "orange";
+                    } else {
+                        s.style.color = "black";
+                    }
+                });
+            });
+
+            star.addEventListener("click", () => {
+                selectedRating = index + 1;
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.style.color = "orange";
+                    } else {
+                        s.style.color = "black";
+                    }
+                });
+            });
+
+        });
+
+
         for (let i = 1; i <= 20; i++) {
             const ingredient = meal[`strIngredient${i}`];
             const measurements = meal[`strMeasure${i}`];
@@ -153,6 +218,7 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     right_div.appendChild(foodOrigin);
     right_div.appendChild(foodIngredients);
     right_div.appendChild(videoYT_A);
+    right_div.appendChild(ratingSystem);
     right_div.appendChild(editRecipe);
 
     upper_div.className = 'upper-div';

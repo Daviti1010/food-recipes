@@ -246,3 +246,31 @@ img {
 .edit-recipe:hover {
   background: #ffd8a8;
 }
+
+#rating-system {
+    margin-top: 12px;
+    margin-left: 5px;
+    display: flex;
+}
+
+.star1,
+.star2,
+.star3,
+.star4,
+.star5 {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* .star1:hover,
+.star2:hover,
+.star3:hover,
+.star4:hover,
+.star5:hover {
+    color: orange;
+} */
+
+#rating-button {
+    /* display: none; */
+    margin-left: 10px;
+}
