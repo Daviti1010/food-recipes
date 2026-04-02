@@ -213,6 +213,20 @@ app.post("/favourites-send", async (req, res) => {
 });
 
 
+app.get("/show-user-rating", async (req, res) => {
+  const userId = req.session.userId;
+
+  try {
+      const result = await db.query("SELECT * FROM ratings WHERE user_id = $1",
+      [userId]
+    );
+    res.json(result.rows);
+
+  } catch (err) {
+    console.log(err);
+  } 
+});
+
 app.post("/submit-rating", async (req, res) => {
   const mealId = req.body.mealId;
   const userId = req.session.userId; 

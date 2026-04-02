@@ -132,42 +132,72 @@ async function displayMealInstructions(data: ApiMeal | UserRecipe) {
         const stars = [star1, star2, star3, star4, star5];
 
         let selectedRating = 0;
-        let ratingToSubmit: number[] = [];
+        let ratingSubmitted = false;
+
+        const ratingResponse = await fetch('/show-user-rating');
+        const ratedMeals = await ratingResponse.json();
+
+        ratedMeals.forEach((ratedMeal: any) => {
+            if (ratedMeal.meal_id === Number(meal.idMeal)) {
+                selectedRating = ratedMeal.meal_rating;
+                ratingSubmitted = true;
+                ratingButton.style.display = 'none';
+
+                stars.forEach((s, i) => {
+                    s.style.color = i < selectedRating ? "orange" : "black";
+                });
+            }
+        });
 
         stars.forEach((star, index) => {
-            addRatingToDB(star, index, ratingButton, ratingToSubmit, { idMeal: meal.idMeal });
-
             star.addEventListener("mouseenter", () => {
+                if (ratingSubmitted) return;
                 stars.forEach((s, i) => {
-                    if (i <= index) {
-                        s.style.color = "orange";
-                    } else {
-                        s.style.color = "black";
-                    }
+                    s.style.color = i <= index ? "orange" : "black";
                 });
             });
 
             star.addEventListener("mouseleave", () => {
+                if (ratingSubmitted) return;
                 stars.forEach((s, i) => {
-                    if (i < selectedRating) {
-                        s.style.color = "orange";
-                    } else {
-                        s.style.color = "black";
-                    }
+                    s.style.color = i < selectedRating ? "orange" : "black";
                 });
             });
 
             star.addEventListener("click", () => {
+                if (ratingSubmitted) return;
                 selectedRating = index + 1;
                 stars.forEach((s, i) => {
-                    if (i <= index) {
-                        s.style.color = "orange";
-                    } else {
-                        s.style.color = "black";
-                    }
+                    s.style.color = i <= index ? "orange" : "black";
                 });
             });
+        });
 
+        ratingButton.addEventListener("click", async () => {
+            if (ratingSubmitted) return;
+            if (selectedRating === 0) {
+                alert('Please select a rating first');
+                return;
+            }
+
+            const response = await fetch('/submit-rating', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mealId: meal.idMeal,
+                    rating: selectedRating
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                ratingSubmitted = true;
+                ratingButton.style.display = 'none';
+                alert('Rating submitted!');
+            } else {
+                alert('Failed to submit rating. Please try again.');
+            }
         });
 
 
@@ -241,36 +271,6 @@ async function displayMealInstructions(data: ApiMeal | UserRecipe) {
         ratingSystem.style.display = 'block';
         ratingSystem!.style.visibility = 'visible';
     }
-}
-
-function addRatingToDB(star: HTMLSpanElement, index: number, ratingButton: HTMLButtonElement, ratingToSubmit: number[], meal: { idMeal: number }) {
-    star.addEventListener("click", () => {
-        ratingToSubmit = [index + 1];
-        console.log(ratingToSubmit[0]);
-
-        ratingButton.addEventListener("click", async () => {
-            console.log(`Submitting rating: ${ratingToSubmit[0]} for meal: ${meal.idMeal}`);
-
-            const response = await fetch('/submit-rating', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    mealId: meal.idMeal,
-                    rating: ratingToSubmit[0]
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Rating submitted successfully!');
-            } else {                       
-                alert('Failed to submit rating. Please try again.');
-            }
-        });
-    });
 }
 
 // fetchMealInstructions(mealName);
