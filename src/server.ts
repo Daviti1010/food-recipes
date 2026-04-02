@@ -213,6 +213,33 @@ app.post("/favourites-send", async (req, res) => {
 });
 
 
+app.post("/submit-rating", async (req, res) => {
+  const mealId = req.body.mealId;
+  const userId = req.session.userId; 
+  const rating = req.body.rating;
+
+  try { 
+    console.log("Meal Id: " + mealId)
+    console.log("User Id: " + userId)
+    console.log("Rating: " + rating)
+
+    if (!userId) {
+      return res.status(401).json({ success: false, error: 'User not authenticated' });
+    }
+
+    await db.query(
+      'INSERT INTO ratings (user_id, meal_id, meal_rating) VALUES ($1, $2, $3)',
+      [userId, mealId, rating]
+    );
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
 app.delete("/remove-food/:id", async (req, res) => {
 
   const mealId = req.params.id;

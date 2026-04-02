@@ -61,7 +61,7 @@ async function fetchMealInstructions(mealName: string | null) {
 }
 
 
-function displayMealInstructions(data: ApiMeal | UserRecipe) {
+async function displayMealInstructions(data: ApiMeal | UserRecipe) {
 
     const foodName = document.createElement('h1');
     const foodOrigin = document.createElement('p');
@@ -77,7 +77,7 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     const instructions = document.createElement('p');
     const unified_div = document.createElement('div');
     const editRecipe = document.createElement("button");
-    const ratingSystem = document.createElement("div");
+    const ratingSystem = document.getElementById("rating-system") as HTMLDivElement || document.createElement("div");
 
     if (fromPage === 'my_recipes') {
         const userData = data as UserRecipe;
@@ -119,35 +119,23 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
 
         editRecipe.style.display = 'none';
 
-        ratingSystem.id = 'rating-system';
+        const star1 = document.querySelector(".star1") as HTMLSpanElement || document.createElement("span");
+        const star2 = document.querySelector(".star2") as HTMLSpanElement || document.createElement("span");
+        const star3 = document.querySelector(".star3") as HTMLSpanElement || document.createElement("span");
+        const star4 = document.querySelector(".star4") as HTMLSpanElement || document.createElement("span");
+        const star5 = document.querySelector(".star5") as HTMLSpanElement || document.createElement("span");
+        const ratingButton = document.getElementById("rating-button") as HTMLButtonElement || document.createElement("button");
 
-        const star1 = document.createElement("span");
-        const star2 = document.createElement("span");
-        const star3 = document.createElement("span");
-        const star4 = document.createElement("span");
-        const star5 = document.createElement("span");
-        const ratingButton = document.createElement("button");
-
-        star1.innerHTML = '<i class="fa-solid fa-star star1"></i>'
-        star2.innerHTML = '<i class="fa-solid fa-star star2"></i>'
-        star3.innerHTML = '<i class="fa-solid fa-star star3"></i>'
-        star4.innerHTML = '<i class="fa-solid fa-star star4"></i>'
-        star5.innerHTML = '<i class="fa-solid fa-star star5"></i>'
-        ratingButton.id = 'rating-button';
-        ratingButton.textContent = 'Submit';
         
-        ratingSystem.appendChild(star1);
-        ratingSystem.appendChild(star2);
-        ratingSystem.appendChild(star3);
-        ratingSystem.appendChild(star4);
-        ratingSystem.appendChild(star5);
         ratingSystem.appendChild(ratingButton);
 
         const stars = [star1, star2, star3, star4, star5];
 
         let selectedRating = 0;
+        let ratingToSubmit: number[] = [];
 
         stars.forEach((star, index) => {
+            addRatingToDB(star, index, ratingButton, ratingToSubmit, { idMeal: meal.idMeal });
 
             star.addEventListener("mouseenter", () => {
                 stars.forEach((s, i) => {
@@ -242,8 +230,48 @@ function displayMealInstructions(data: ApiMeal | UserRecipe) {
     unified_div.appendChild(lower_div);
 
     document.body.appendChild(unified_div);
+
+    const response = await fetch(`/api/current-user`);
+    const userData = await response.json();
+    const userId = userData.userId;
+
+    if (!userId) {
+        ratingSystem.style.display = 'none';
+    } else {
+        ratingSystem.style.display = 'block';
+        ratingSystem!.style.visibility = 'visible';
+    }
 }
 
+function addRatingToDB(star: HTMLSpanElement, index: number, ratingButton: HTMLButtonElement, ratingToSubmit: number[], meal: { idMeal: number }) {
+    star.addEventListener("click", () => {
+        ratingToSubmit = [index + 1];
+        console.log(ratingToSubmit[0]);
+
+        ratingButton.addEventListener("click", async () => {
+            console.log(`Submitting rating: ${ratingToSubmit[0]} for meal: ${meal.idMeal}`);
+
+            const response = await fetch('/submit-rating', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    mealId: meal.idMeal,
+                    rating: ratingToSubmit[0]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Rating submitted successfully!');
+            } else {                       
+                alert('Failed to submit rating. Please try again.');
+            }
+        });
+    });
+}
 
 // fetchMealInstructions(mealName);
 // getUserRecipeInstructions();
