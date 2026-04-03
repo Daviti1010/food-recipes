@@ -176,8 +176,19 @@ img {
 
 .food-name {
     font-size: 18px;
-    margin-top: 10px;
+    margin-top: 2px;
     margin-left: 10px;
+}
+
+.foodplusrating {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.food-rating {
+    font-size: 16px;
 }
 
 .part {
