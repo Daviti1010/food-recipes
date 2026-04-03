@@ -213,6 +213,22 @@ app.post("/favourites-send", async (req, res) => {
 });
 
 
+app.get("/display-ratings", async (req, res) => {
+
+  try {
+    const result = await db.query("SELECT * FROM ratings");
+    res.json(result.rows);
+    // console.log(result.rows);  
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
 app.get("/show-user-rating", async (req, res) => {
   const userId = req.session.userId;
 

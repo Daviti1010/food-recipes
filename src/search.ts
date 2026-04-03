@@ -70,8 +70,39 @@ async function getData(food: string) {
         } else if (data.meals && data.meals.length === 1) {
             createFoodCard(data.meals[0]);
         }
+                
+        const dataMeals = data.meals;
 
-        // console.log(data.meals);
+        const ratings = await getAllRatings();
+        console.log(ratings);
+
+        ratings.forEach((rating: any) => {
+            dataMeals.forEach((meal: Food) => {
+                if (rating.meal_id === Number(meal.idMeal)) {
+                    const card = document.querySelector(`[data-meal-id="${meal.idMeal}"]`);
+
+                    if (card) {
+                        let total = Number(card.getAttribute('data-total')) || 0;
+                        let count = Number(card.getAttribute('data-count')) || 0;
+
+                        total += rating.meal_rating;
+                        count += 1;
+
+                        const average = (total / count).toFixed(1);
+
+                        card.setAttribute('data-total', String(total));
+                        card.setAttribute('data-count', String(count));
+
+                        const ratingDisplay = card.querySelector('.food-rating');
+                        if (ratingDisplay) {
+                            ratingDisplay.textContent = `⭐ ${average} (${count} reviews)`;
+                        }
+                    }
+                }
+            });
+        });
+        
+        console.log(dataMeals)
         return data;
 
     } catch (err) {
@@ -80,6 +111,12 @@ async function getData(food: string) {
     }
 }
 
+async function getAllRatings() {
+    const response1 = await fetch(`/display-ratings`);
+    const ratings = await response1.json();
+    return ratings;
+};
+
 // getData("pizza");
 
 async function createFoodCard(meal: Food) {
@@ -87,7 +124,9 @@ async function createFoodCard(meal: Food) {
     const card1 = document.createElement("div");
     const card2 = document.createElement("div");
     const unifiedDiv = document.createElement("div");
+    const foodPlusRating = document.createElement("div");
     const foodName = document.createElement("h1");
+    const foodRating = document.createElement("p");
     const foodOrigins = document.createElement("p");
     const foodIngredients = document.createElement("p");
     const seeFoodInstructions = document.createElement("a");
@@ -138,6 +177,17 @@ async function createFoodCard(meal: Food) {
         addBtn.style.display = 'none';
     }
 
+    unifiedDiv.setAttribute('data-meal-id', meal.idMeal);
+    unifiedDiv.setAttribute('data-total', '0');
+    unifiedDiv.setAttribute('data-count', '0');
+
+    foodRating.className = "food-rating";
+    foodRating.textContent = '(No ratings yet)';
+
+    foodPlusRating.className = "foodplusrating";
+
+    foodPlusRating.appendChild(foodName);
+    foodPlusRating.appendChild(foodRating);
 
     unifiedDiv.className = "unified-div";
 
@@ -145,7 +195,7 @@ async function createFoodCard(meal: Food) {
     unifiedDiv.appendChild(card2);
     unifiedDiv.appendChild(addBtn);
 
-    card2.appendChild(foodName);
+    card2.appendChild(foodPlusRating);
     card2.appendChild(foodOrigins);
     card2.appendChild(foodIngredients);
     card2.appendChild(seeFoodInstructions);

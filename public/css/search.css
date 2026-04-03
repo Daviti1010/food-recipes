@@ -191,7 +191,7 @@ img {
 
 .cards div div h1 {
     font-size: 18px;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     margin-left: 10px;
 }
 
@@ -203,6 +203,13 @@ img {
 .unified-div {
     display: flex;
     justify-content: center;
+    margin-top: 10px;
+}
+
+.foodplusrating {
+    display: flex;
+    gap: 10px;
+    align-items: center;
     margin-top: 10px;
 }
 
