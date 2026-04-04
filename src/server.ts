@@ -6,8 +6,14 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import bcrypt from "bcrypt";
 import session from "express-session";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import passport from "passport";
 
 dotenv.config();
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const CALLBACK_URL = process.env.CALLBACK_URL;
 
 const salt_rounds = 10;
 
@@ -61,6 +67,9 @@ app.use(session({
     secure: false,
   }
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.render("search.ejs");
@@ -146,6 +155,31 @@ app.get("/api/current-user", async (req, res) => {
     res.json({userId: null})
   }
 })
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account"
+  })
+);
+
+app.get(
+  "/auth/google/recipes",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    if (!req.user) {
+        return res.redirect("/login");
+    }
+
+    const user = req.user as any;
+    req.session.userId = user.user_id;
+
+    req.session.save(() => {
+        res.redirect("/");
+    });
+  }
+);
 
 
 app.get("/api-info/search/:food", async (req, res) => {
@@ -542,6 +576,53 @@ app.post('/api/auth/logout', (req, res) => {
         res.json({ success: true, message: 'Logged out successfully' });
     });
 });
+
+
+passport.use(
+  "google",
+    new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID!,
+    clientSecret: GOOGLE_CLIENT_SECRET!,
+    callbackURL: CALLBACK_URL!,
+    }, async (accessToken: any, refreshToken: any, profile: any, cb: any) => {
+      console.log(profile);
+      
+      const email = profile.emails[0].value;
+
+      try {
+          const result = await db.query(
+            "SELECT * FROM user_info WHERE email = $1",
+            [email]
+          );
+
+        if (result.rows.length === 0) {
+          const newUser = await db.query(
+            "INSERT INTO user_info (email, password) VALUES ($1, $2) RETURNING *",
+            [email, "google"]
+          );
+          return cb(null, newUser.rows[0]);
+        } else {
+          return cb(null, result.rows[0]);
+        }
+      } catch (err) {
+        cb(err);
+      }
+    }
+));
+
+passport.serializeUser((user: any, done) => {
+  done(null, user.user_id);
+});
+
+passport.deserializeUser(async (id: number, done) => {
+  try {
+    const user = await db.query("SELECT * FROM user_info WHERE user_id = $1", [id]);
+    done(null, user.rows[0]);
+  } catch (err) {
+    done(err, null);
+  }
+});
+
 
 
 app.listen(port, () => {
