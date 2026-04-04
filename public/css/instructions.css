@@ -151,6 +151,15 @@ header {
     background: #fee2e2;
 }
 
+.dropdown-menu #login-btn {
+    color: #34b804;
+    font-weight: 500;
+}
+
+.dropdown-menu #login-btn:hover {
+    background: #c4f3b8;
+}
+
 /* //////////// */
 
 
@@ -253,6 +262,7 @@ img {
     display: flex;
     visibility: hidden;
     align-items: center;
+    gap: 3px;
 }
 
 .star1,

@@ -93,6 +93,8 @@ async function displayMealInstructions(data: ApiMeal | UserRecipe) {
         const penIcon = document.createElement("i");
         const text = document.createTextNode(" Edit");
 
+        ratingSystem.style.display = 'none';
+
         editRecipe.className = 'edit-recipe';
         penIcon.classList.add("fa-solid", "fa-pen");
 
@@ -268,7 +270,6 @@ async function displayMealInstructions(data: ApiMeal | UserRecipe) {
     if (!userId) {
         ratingSystem.style.display = 'none';
     } else {
-        ratingSystem.style.display = 'block';
         ratingSystem!.style.visibility = 'visible';
     }
 }
