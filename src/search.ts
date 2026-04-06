@@ -12,12 +12,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     await getUserId();
 });
 
+document.querySelectorAll('.search-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+        const query = tag.textContent!.trim();
+        searchInput.value = query;
+        part1.innerHTML = '';
+        document.getElementById('results-label')!.style.display = 'block';
+        getData(query);
+    });
+});
+
+
+
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
         part1.innerHTML = '';
-        getData(query)
-        console.log(query)
+        document.getElementById('results-label')!.style.display = 'block'; // ← add this
+        getData(query);
     }
 });
 
@@ -131,6 +143,8 @@ async function createFoodCard(meal: Food) {
     const foodIngredients = document.createElement("p");
     const seeFoodInstructions = document.createElement("a");
     const foodInstructions = document.createElement("p");
+    const cardFooter = document.createElement("div");
+
 
     const addBtn = document.createElement("button");
     const addPlus = '<i class="fa-solid fa-plus"></i>'
@@ -177,6 +191,10 @@ async function createFoodCard(meal: Food) {
         addBtn.style.display = 'none';
     }
 
+    cardFooter.className = "card-footer";
+    cardFooter.appendChild(seeFoodInstructions);
+    cardFooter.appendChild(addBtn);
+
     unifiedDiv.setAttribute('data-meal-id', meal.idMeal);
     unifiedDiv.setAttribute('data-total', '0');
     unifiedDiv.setAttribute('data-count', '0');
@@ -199,6 +217,7 @@ async function createFoodCard(meal: Food) {
     card2.appendChild(foodOrigins);
     card2.appendChild(foodIngredients);
     card2.appendChild(seeFoodInstructions);
+    card2.appendChild(cardFooter);
     card2.className = `card2 card`;
 
     part1.appendChild(unifiedDiv);

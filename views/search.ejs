@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Recipes — Search</title>
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,19 +12,31 @@
 
     <%- include('partials/header') %>
 
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search for food...">
-        <button class="search-btn">Search</button>
-    </div>
+    <div class="hero">
+        <div class="hero-eyebrow">Discover something delicious</div>
+        <h1>What are you<br>craving today?</h1>
+        <p class="hero-sub">Search thousands of recipes from around the world</p>
 
-
-    <section class="cards">
-        <div class="part part1">
-
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder='Try "pasta", "chicken", "shawarma"...'>
+            <button class="search-btn">Search</button>
         </div>
 
+        <div class="search-tags">
+            <button class="search-tag">Pasta</button>
+            <button class="search-tag">Chicken</button>
+            <button class="search-tag">Seafood</button>
+            <button class="search-tag">Vegetarian</button>
+            <button class="search-tag">Dessert</button>
+            <button class="search-tag">Beef</button>
+        </div>
+    </div>
+
+    <div class="section-label" id="results-label" style="display: none;">Results</div>
+
+    <section class="cards">
+        <div class="part part1"></div>
     </section>
-    
 
     <script type="module" src="../dist/search.js"></script>
 </body>
