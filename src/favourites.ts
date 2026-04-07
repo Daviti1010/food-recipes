@@ -75,6 +75,9 @@ function displayFoodCards(meal: any, ratings?: any[]) {
     const foodInstructions = document.createElement("p");
     const removeBtn = document.createElement("button");
     const removeX = '<i class="fa-solid fa-xmark"></i>';
+    const cardFooter = document.createElement("div");
+    cardFooter.className = "card-footer";
+    cardFooter.appendChild(seeFoodInstructions);
 
     const img1 = document.createElement('img');
     img1.src = meal.strMealThumb;
@@ -136,6 +139,7 @@ function displayFoodCards(meal: any, ratings?: any[]) {
     card2.appendChild(foodOrigins);
     card2.appendChild(foodIngredients);
     card2.appendChild(seeFoodInstructions);
+    card2.appendChild(cardFooter);
     card2.className = `card2 card`;
 
     moveToPage(seeFoodInstructions, meal);
