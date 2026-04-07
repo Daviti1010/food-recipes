@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Favourites</title>
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/favourites.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,16 +12,21 @@
 
     <%- include('partials/header') %>
 
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search for food...">
+    <div class="page-hero">
+        <p class="page-eyebrow">Your collection</p>
+        <h1>Favourite Recipes</h1>
+
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" class="search-input" placeholder="Search your favourites...">
+        </div>
     </div>
 
-    <section>
-        <div class="cards">
-            
-        </div>
-    </section>
+    <div class="section-label" id="results-label">Saved meals</div>
 
+    <section>
+        <div class="cards"></div>
+    </section>
 
     <script type="module" src="../dist/favourites.js"></script>
 </body>
