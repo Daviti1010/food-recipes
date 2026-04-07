@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@400;700&display=swap');
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
     min-height: 100vh;
     display: flex;
@@ -248,6 +242,41 @@ button[type="submit"]:active {
 }
 
 #google-text {
+    margin-left: 0;
+}
+
+.guest-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border: 1.5px solid #cccac8;
+    border-radius: 50px;
+    background: #f6f4f1;
+    color: #5c3d2e;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+.guest-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.guest-btn:hover {
+    background: #dbd8d3;
+    border-color: #9d9d9d;
+    box-shadow: 0 2px 12px rgba(192, 98, 45, 0.10);
+}
+
+#guest-text {
     margin-left: 0;
 }
 
