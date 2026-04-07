@@ -131,8 +131,8 @@ function addImage(input: any, inputDiv: any) {
                 // console.log(e);
                 const img = document.createElement('img');
                 img.src = e.target?.result as string;
-                img.style.width = '300px';
-                img.style.height = '300px';
+                // img.style.width = '300px';
+                // img.style.height = '300px';
                 
                 inputDiv.innerHTML = '';
                 inputDiv.appendChild(img);
