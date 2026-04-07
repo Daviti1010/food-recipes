@@ -69,6 +69,7 @@ function createRecipeCards(recipe: recipe) {
     const foodIngredients = document.createElement("p") as HTMLParagraphElement;
     const seeFoodInstructions = document.createElement("a") as HTMLAnchorElement;
     const foodInstructions = document.createElement("p") as HTMLParagraphElement;
+    const cardFooter = document.createElement("div");
 
     const removeBtn = document.createElement("button");
     const removeX = '<i class="fa-solid fa-xmark"></i>'
@@ -94,14 +95,19 @@ function createRecipeCards(recipe: recipe) {
 
     const unifiedDiv = document.createElement("div") as HTMLDivElement;
 
+    cardFooter.className = "card-footer";
+    cardFooter.appendChild(seeFoodInstructions);
+
     card1.className = 'card1 card';
     card1.appendChild(img);
 
     card2.className = 'card2 card';
+    // card2.appendChild(foodPlusRating);
     card2.appendChild(foodName);
     card2.appendChild(foodOrigins);
     card2.appendChild(foodIngredients);
     card2.appendChild(seeFoodInstructions);
+    card2.appendChild(cardFooter);
 
     unifiedDiv.className = 'unified-div'
 
