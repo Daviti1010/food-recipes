@@ -9,6 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
     profileDropdown();
 });
 
+const closeBtn = document.getElementById('closeModal')! as HTMLButtonElement;
+const modal = document.getElementById('modal')! as HTMLDivElement;
+const errorMsg = document.getElementById('error-msg')! as HTMLHeadingElement;
+
+closeBtn.addEventListener('click', () => {
+    modal.classList.remove("open");
+    setTimeout(() => {
+        window.location.href = '/my-recipes';
+    }, 800);
+});
+
 
 async function getUserRecipeInstructions() {
     const response = await fetch(`/api/recipes/${recipeId}`);
@@ -143,8 +154,11 @@ function displayMealInstructions(recipe: any) {
             const data = await response.json();
             
             if (data.success) {
-                alert('Recipe updated!');
-                window.location.href = `/my-recipes`;
+                modal.classList.add("open");
+            } else {
+                modal.classList.add("open");
+                errorMsg.textContent = "Failed to edit the recipe. Please try again.";
+                errorMsg.style.color = "red";
             }
             
         } catch (err) {
