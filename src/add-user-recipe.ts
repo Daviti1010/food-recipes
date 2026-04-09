@@ -4,6 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
     profileDropdown();
 });
 
+const closeBtn = document.getElementById('closeModal')! as HTMLButtonElement;
+const modal = document.getElementById('modal')! as HTMLDivElement;
+const errorMsg = document.getElementById('error-msg')! as HTMLHeadingElement;
+
+closeBtn.addEventListener('click', () => {
+    modal.classList.remove("open");
+    setTimeout(() => {
+        window.location.href = '/my-recipes';
+    }, 800);
+});
+
 const cards = document.querySelector(".cards");
 
 let picDiv = document.createElement("div") as HTMLDivElement;
@@ -105,7 +116,15 @@ save_btn?.addEventListener("click", async () => {
         });
         
         const data = await response.json();
-        console.log('Success:', data);
+
+        if (data.success) {
+            modal.classList.add("open");
+        } else {
+            modal.classList.add("open");
+            errorMsg.textContent = "Failed to add recipe. Please try again.";
+            errorMsg.style.color = "red";
+        }
+        // console.log('Success:', data);
         
     } catch (err) {
         console.error('Error:', err);
