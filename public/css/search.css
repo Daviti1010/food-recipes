@@ -461,11 +461,8 @@ img {
 
 .modal-inner {
     background-color: #f8e4c5;
-    /* padding: 24px; */
     padding: 40px 50px;
     border-radius: 12px;
-    /* max-width: 500px; */
-    /* width: 90%; */
     box-shadow: 0 4px 24px rgba(124,58,30,0.12);
     position: relative;
     text-align: center;
@@ -497,25 +494,21 @@ img {
     border-radius: 20px;
     cursor: pointer;
 
-    /* soft cozy shadow */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
-    transition: all 0.25s ease;
+    transition: all 0.1s ease;
 }
 
-/* hover - gentle lift */
 #closeModal:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
-/* click - soft press */
 #closeModal:active {
     transform: scale(0.96);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* optional: subtle glow on focus */
 #closeModal:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(253, 160, 133, 0.4);

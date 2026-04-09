@@ -1,13 +1,22 @@
 import {profileDropdown} from "./profile-dropdown.js";
 
+document.addEventListener('DOMContentLoaded', () => {
+    profileDropdown();
+});
+
 const params = new URLSearchParams(window.location.search);
 const mealName = params.get('name');
 const fromPage = params.get('from');
 // console.log(fromPage);
+const closeBtn = document.getElementById('closeModal')! as HTMLButtonElement;
+const modal = document.getElementById('modal')! as HTMLDivElement;
+const errorMsg = document.getElementById('error-msg')! as HTMLHeadingElement;
 
-document.addEventListener('DOMContentLoaded', () => {
-    profileDropdown();
+
+closeBtn.addEventListener('click', () => {
+    modal.classList.remove("open");
 });
+
 
 interface ApiMeal {
     meals: Array<{
@@ -196,9 +205,11 @@ async function displayMealInstructions(data: ApiMeal | UserRecipe) {
             if (data.success) {
                 ratingSubmitted = true;
                 ratingButton.style.display = 'none';
-                alert('Rating submitted!');
+                modal.classList.add("open");
             } else {
-                alert('Failed to submit rating. Please try again.');
+                modal.classList.add("open");
+                errorMsg.textContent = "Failed to submit rating. Please try again.";
+                errorMsg.style.color = "red";
             }
         });
 
