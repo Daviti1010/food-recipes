@@ -34,11 +34,13 @@ async function gettingIdFromDB() {
     try {
         const response = await fetch("/favourites-send");
         const dataDB = await response.json();
+        const recipes = dataDB.recipes;
+        // console.log(recipes);
 
         const ratingsResponse = await fetch('/display-ratings');
         const ratings = await ratingsResponse.json();
 
-        dataDB.forEach((row: any) => {
+        recipes.forEach((row: any) => {
             getMealById(row.meal_id, ratings);
         });
 
@@ -68,7 +70,7 @@ function displayFoodCards(meal: any, ratings?: any[]) {
     const unifiedDiv = document.createElement("div");
     const foodPlusRating = document.createElement("div");
     const foodName = document.createElement("h1");
-    const foodRating = document.createElement("p"); // ← added
+    const foodRating = document.createElement("p");
     const foodOrigins = document.createElement("p");
     const foodIngredients = document.createElement("p");
     const seeFoodInstructions = document.createElement("a");

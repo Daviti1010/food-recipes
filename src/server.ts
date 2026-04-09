@@ -218,7 +218,8 @@ app.get("/favourites-send", async (req, res) => {
     const result = await db.query("SELECT * FROM app_favourite_recipes WHERE user_id = $1",
       [userId]
     );
-    res.json(result.rows);
+    // res.json(result.rows);
+    res.json({ success: true, recipes: result.rows });
     // console.log(result.rows);
 
   } catch (err) {
@@ -237,7 +238,10 @@ app.post("/favourites-send", async (req, res) => {
     // console.log(mealId);
     
     await db.query('INSERT INTO app_favourite_recipes (user_id, meal_id) VALUES ($1, $2)', [userId, mealId]);
-    res.status(200).json({ message: 'Meal added to favorites' });
+    res.status(200).json({ 
+      success: true,
+      message: 'Meal added to favorites'
+    });
     
 
   } catch (err) {

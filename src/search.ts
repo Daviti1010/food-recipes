@@ -2,6 +2,19 @@ import {profileDropdown} from "./profile-dropdown.js";
 
 let userID: number | null = null;
 
+// const openBtn = document.getElementById('openModal')! as HTMLButtonElement;
+const closeBtn = document.getElementById('closeModal')! as HTMLButtonElement;
+const modal = document.getElementById('modal')! as HTMLDivElement;
+const errorMsg = document.getElementById('error-msg')! as HTMLHeadingElement;
+
+// openBtn.addEventListener('click', () => {
+//     modal.classList.add("open");
+// });
+
+closeBtn.addEventListener('click', () => {
+    modal.classList.remove("open");
+});
+
 const part1 = document.querySelector(".part1") as HTMLBodyElement;
 
 const searchInput = document.querySelector('.search-input') as HTMLInputElement;
@@ -148,6 +161,7 @@ async function createFoodCard(meal: Food) {
 
     const addBtn = document.createElement("button");
     const addPlus = '<i class="fa-solid fa-plus"></i>'
+    addBtn.id = 'openModal';
 
     const img1 = document.createElement('img');
     img1.src = meal.strMealThumb;
@@ -226,11 +240,30 @@ async function createFoodCard(meal: Food) {
 
 
     addBtn.addEventListener("click", async function() {
-        await fetch('/favourites-send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ meal_id: meal.idMeal })
-        });
+        try {
+            const response = await fetch('/favourites-send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ meal_id: meal.idMeal })
+                });
+
+            if (!response.ok) {
+                throw new Error("Failed request");
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                modal.classList.add("open");
+            } else {
+                modal.classList.add("open");
+                errorMsg.textContent = "Failed to add recipe to favorites. Please try again.";
+                errorMsg.style.color = "red";
+            }
+        }   
+        catch (err) {
+            console.log(err);
+        }
     });
 
 }
