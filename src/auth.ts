@@ -9,6 +9,11 @@ const codeInput = document.getElementById("code-input") as HTMLInputElement;
 const verifyBtn = document.getElementById("verify-btn") as HTMLButtonElement;
 const otpError = document.getElementById("otp-error") as HTMLParagraphElement;
 
+const setPasswordInput = document.getElementById("setPassword") as HTMLInputElement;
+const confirmPasswordInput = document.getElementById("confirmPassword") as HTMLInputElement;
+const registerBtn = document.getElementById("register-btn") as HTMLButtonElement;
+const form = document.querySelector(".form") as HTMLFormElement;
+
 const passwordGroup = document.querySelector(".password-group1") as HTMLDivElement;
 const setNewPasswordInput = document.getElementById("setNewPassword") as HTMLInputElement;
 const confirmNewPasswordInput = document.getElementById("confirmNewPassword") as HTMLInputElement;
@@ -20,78 +25,165 @@ const successMessage = document.getElementById("message") as HTMLParagraphElemen
 
 let currentEmail = "";
 
+if (registerBtn) {
+     setPasswordInput.addEventListener("keyup", () => {
+        validatePasswords(setPasswordInput.value.trim(), confirmPasswordInput.value.trim());
+    });
 
-confirmBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    confirmPasswordInput.addEventListener("keyup", () => {
+        validatePasswords(setPasswordInput.value.trim(), confirmPasswordInput.value.trim());
+    });
 
-  if (!isValidEmail) {
-    errorMsg.textContent = "Please enter a valid email.";
-    return;
-  }
+    form?.addEventListener("submit", async function(e) {
+    e.preventDefault();
+    
+    const errors = validatePasswords(setPasswordInput.value.trim(), confirmPasswordInput.value.trim());
+    
+    if (errors.isValid === false) {
+        return;
+    }
+    
+    passwordError.textContent = '';
+    confirmError.textContent = '';
+    // submitForm(setPasswordInput.value, emailInput.value);
+     try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                password: setPasswordInput.value.trim(),
+                email: emailInput.value.trim()
+             })
+        });
 
-  errorMsg.textContent = "";
+        // console.log('Response status:', response.status);
+        // console.log('Response ok:', response.ok);   
+        
+        const data = await response.json();
+        // console.log('Response data:', data);
 
-  const found = await fetch("/find-user", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  }).then(r => r.json());
+        if (data.success) {
+            console.log('Success! Redirecting...');
+            successMessage.textContent = 'Success!'
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        } else {
+            passwordError.textContent = data.error;
+        }
+    } catch (err) {
+        console.error(err);
+        passwordError.textContent = 'Registration failed';
+    }
 
-  if (!found.success) {
-    errorMsg.textContent = found.message;
-    return;
-  }
+    });
 
-  await fetch("/send-email", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  });
+} else if (a_form) {
+    confirmBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  currentEmail = email;
-  emailDiv.style.display = "none";
-  resetCodeDiv.style.display = "block";
-});
+    if (!isValidEmail) {
+        errorMsg.textContent = "Please enter a valid email.";
+        return;
+    }
 
+    errorMsg.textContent = "";
 
-verifyBtn.addEventListener("click", async () => {
-  const code = codeInput.value.trim();
+    const found = await fetch("/find-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+    }).then(r => r.json());
 
-  if (!code) {
-    otpError.textContent = "Please enter the code.";
-    return;
-  }
+    if (!found.success) {
+        errorMsg.textContent = found.message;
+        return;
+    }
 
-  otpError.textContent = "";
+    await fetch("/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+    });
 
-  const data = await fetch("/verify-otp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: currentEmail, code })
-  }).then(r => r.json());
-
-  if (!data.success) {
-    otpError.textContent = data.message;
-    return;
-  }
-
-  resetCodeDiv.style.display = "none";
-  passwordGroup.style.display = "block";
-});
+        currentEmail = email;
+        emailDiv.style.display = "none";
+        resetCodeDiv.style.display = "block";
+    });
 
 
-a_form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+    verifyBtn.addEventListener("click", async () => {
+    const code = codeInput.value.trim();
 
-  const pass1 = setNewPasswordInput.value.trim();
-  const pass2 = confirmNewPasswordInput.value.trim();
-  const { isValid } = validatePasswords(pass1, pass2);
+    if (!code) {
+        otpError.textContent = "Please enter the code.";
+        return;
+    }
 
-  if (!isValid) return;
+    otpError.textContent = "";
 
-  await updatePassword(pass1, currentEmail);
-});
+    const data = await fetch("/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: currentEmail, code })
+    }).then(r => r.json());
+
+    if (!data.success) {
+        otpError.textContent = data.message;
+        return;
+    }
+
+    resetCodeDiv.style.display = "none";
+    passwordGroup.style.display = "block";
+    });
+
+
+    a_form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const pass1 = setNewPasswordInput.value.trim();
+    const pass2 = confirmNewPasswordInput.value.trim();
+    const { isValid } = validatePasswords(pass1, pass2);
+
+    if (!isValid) return;
+
+    await updatePassword(pass1, currentEmail);
+    });
+
+    setNewPasswordInput.addEventListener("keyup", () => {
+    validatePasswords(setNewPasswordInput.value.trim(), confirmNewPasswordInput.value.trim());
+    });
+
+    confirmNewPasswordInput.addEventListener("keyup", () => {
+    validatePasswords(setNewPasswordInput.value.trim(), confirmNewPasswordInput.value.trim());
+    });
+
+    async function updatePassword(password: string, email: string) {
+        try {
+            const response = await fetch("/new-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password, email })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                successMessage.textContent = "Password updated successfully!";
+                successMessage.id = "success";
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1800);
+            } else {
+                passwordError.textContent = data.message || "Something went wrong.";
+            }
+            } catch (err) {
+                console.error(err);
+                passwordError.textContent = "Something went wrong.";
+            }
+    }
+}
 
 
 function validatePasswords(pass1: string, pass2: string) {
@@ -99,26 +191,18 @@ function validatePasswords(pass1: string, pass2: string) {
   passwordError.textContent = "";
   confirmError.textContent = "";
 
-  if (pass1.length < 8) {
-    passwordError.textContent = "Password must be at least 8 characters.";
-    isValid = false;
-  }
+    if (pass1 !== '' && pass1!.length < 8) {
+        passwordError.textContent = 'Password must be at least 8 characters';
+        isValid = false;
+    }
 
-  if (pass2 !== "" && pass1 !== pass2) {
-    confirmError.textContent = "Passwords do not match.";
-    isValid = false;
-  }
+    if (pass2 !== "" && pass1 !== pass2) {
+        confirmError.textContent = "Passwords do not match.";
+        isValid = false;
+    }
 
   return { isValid };
 }
-
-setNewPasswordInput.addEventListener("keyup", () => {
-  validatePasswords(setNewPasswordInput.value.trim(), confirmNewPasswordInput.value.trim());
-});
-
-confirmNewPasswordInput.addEventListener("keyup", () => {
-  validatePasswords(setNewPasswordInput.value.trim(), confirmNewPasswordInput.value.trim());
-});
 
 
 toggleIcons.forEach(icon => {
@@ -134,27 +218,3 @@ toggleIcons.forEach(icon => {
   });
 });
 
-async function updatePassword(password: string, email: string) {
-  try {
-    const response = await fetch("/new-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password, email })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      successMessage.textContent = "Password updated successfully!";
-      successMessage.id = "success";
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 1800);
-    } else {
-      passwordError.textContent = data.message || "Something went wrong.";
-    }
-  } catch (err) {
-    console.error(err);
-    passwordError.textContent = "Something went wrong.";
-  }
-}
