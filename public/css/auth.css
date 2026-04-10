@@ -313,3 +313,64 @@ button[type="submit"]:active {
     color: #a0501f;
     text-decoration: underline;
 }
+
+.reset-code {
+    display: none;
+}
+
+.reset-code label {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #5c3d2e;
+    letter-spacing: 0.3px;
+}
+
+.password-group1 {
+    display: none;
+}
+
+#code-input {
+    width: 100%;
+    padding: 11px 40px 11px 14px;
+    border: 1.5px solid #e0c8a8;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    color: #3b1f0f;
+    background: #fffaf4;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-top: 5px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#confirm-btn {
+    width: 100%;
+    padding: 13px;
+    background: #c0622d;
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 6px;
+}
+
+#confirm-btn:hover {
+    background: #a0501f;
+}
+
+#success {
+    text-align: center;
+    margin-top: 10px;
+    color: green;
+}

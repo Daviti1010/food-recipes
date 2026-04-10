@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import passport from "passport";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -70,6 +71,90 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+const otpStore: Record<string, { code: number; expiresAt: number }> = {};
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+transporter.verify()
+  .then(() => console.log("Mailer ready"))
+  .catch(console.error);
+
+async function sendMail(email: string, code: number) {
+  await transporter.sendMail({
+    from: `"Recipes" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: "Your password reset code",
+    html: `<p>Your reset code:</p>
+           <h2 style="letter-spacing:8px;font-family:monospace">${code}</h2>
+           <p>Expires in <strong>10 minutes</strong>.</p>`,
+  });
+}
+
+app.post("/send-email", async (req, res) => {
+  const { email } = req.body;
+  const code = Math.floor(100000 + Math.random() * 900000);
+
+  otpStore[email] = { code, expiresAt: Date.now() + 10 * 60 * 1000 };
+
+  try {
+    await sendMail(email, code);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to send email" });
+  }
+});
+
+
+app.post("/find-user", async (req, res) => {
+  const email = req.body.email;
+
+  try {
+    const result = await db.query("SELECT * FROM user_info WHERE email = $1",
+    [email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, user: result.rows[0] });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  } 
+
+});
+
+app.post("/verify-otp", async (req, res) => {
+  const { email, code } = req.body;
+  const record = otpStore[email];
+
+  if (!record) {
+    return res.json({ success: false, message: "No code found." });
+  }
+
+  if (Date.now() > record.expiresAt) {
+    delete otpStore[email];
+    return res.json({ success: false, message: "Code expired." });
+  }
+
+  if (record.code !== parseInt(code)) {
+    return res.json({ success: false, message: "Incorrect code." });
+  }
+
+  delete otpStore[email];
+  res.json({ success: true });
+});
 
 app.get("/", (req, res) => {
   res.render("search.ejs");
@@ -540,33 +625,22 @@ app.post("/login", async (req, res) => {
 })
 
 app.post("/new-password", async (req, res) => {
-  const email = req.body.email;
-  const newPassword = req.body.password1;
-  const hash = await bcrypt.hash(newPassword, salt_rounds);
+  const { password, email } = req.body;
 
-  console.log(email + ", " + newPassword)
+  if (!password || !email) {
+    return res.status(400).json({ success: false, message: "Missing fields." });
+  }
 
   try {
-    const checkResult = await db.query("SELECT * FROM user_info WHERE email = $1", [
-      email,
-    ]);
-
-    if (checkResult.rows.length === 0) {
-      return res.send("User not found");
-    } else {
-      const result = await db.query(`UPDATE user_info SET password = $1 WHERE email = $2 RETURNING *`, [
-        hash, email
-      ]);
-      console.log("Password Successfully Changed!")
-      // console.log(result.rows[0])
-      res.json({ 
-        success: true
-      });
-    }
-
-
+    const hashed = await bcrypt.hash(password, salt_rounds);
+    await db.query(
+      "UPDATE user_info SET password = $1 WHERE email = $2",
+      [hashed, email]
+    );
+    res.json({ success: true });
   } catch (err) {
-    console.log("Error: " + err);
+    console.error(err);
+    res.status(500).json({ success: false, message: "Something went wrong." });
   }
 });
 
