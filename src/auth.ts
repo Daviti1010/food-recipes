@@ -19,6 +19,8 @@ const setNewPasswordInput = document.getElementById("setNewPassword") as HTMLInp
 const confirmNewPasswordInput = document.getElementById("confirmNewPassword") as HTMLInputElement;
 const passwordError = document.getElementById("password-error") as HTMLParagraphElement;
 const confirmError = document.getElementById("confirm-error") as HTMLParagraphElement;
+const waitMessage = document.getElementById("wait-message") as HTMLParagraphElement;
+
 
 const a_form = document.getElementById("a-form") as HTMLFormElement;
 const successMessage = document.getElementById("message") as HTMLParagraphElement;
@@ -101,6 +103,8 @@ if (registerBtn) {
         return;
     }
 
+    waitMessage.textContent = "Please wait while we send the verification code...";
+
     await fetch("/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,6 +114,7 @@ if (registerBtn) {
         currentEmail = email;
         emailDiv.style.display = "none";
         resetCodeDiv.style.display = "block";
+        waitMessage.textContent = "";
     });
 
 

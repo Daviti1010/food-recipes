@@ -374,3 +374,30 @@ input[type="number"]::-webkit-outer-spin-button {
     margin-top: 10px;
     color: green;
 }
+
+
+#verify-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background-color: #13bb13;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    font-family: 'Lato', sans-serif;
+}
+
+#verify-btn:hover {
+    background-color: #04a004;
+}
+
+#wait-message {
+    text-align: center;
+    margin-top: 10px;
+    color: #c0622d;
+    font-size: 14px;
+    font-weight: 700;
+}
