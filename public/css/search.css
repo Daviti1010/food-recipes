@@ -513,3 +513,89 @@ img {
     outline: none;
     box-shadow: 0 0 0 3px rgba(253, 160, 133, 0.4);
 }
+
+.filter-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+  padding: 0 16px;
+  margin-right: 225px;
+  display: none;
+}
+
+#rating-filter {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background: linear-gradient(135deg, #f6d365, #fda085);
+    color: #5a3e2b;
+
+    border: none;
+    border-radius: 18px;
+
+    padding: 10px 40px 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    /* soft shadow */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+    transition: all 0.25s ease;
+
+    /* custom arrow */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%235a3e2b' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+/* hover */
+#rating-filter:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* focus */
+#rating-filter:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(253, 160, 133, 0.4);
+}
+
+/* optional: darker cozy version */
+/* body.dark #rating-filter {
+    background: linear-gradient(135deg, #ffb347, #ffcc70);
+    color: #4b2e1e;
+} */
+
+@media (max-width: 1270px) {
+  .filter-bar {
+    margin-right: 85px;
+  }
+}
+
+@media (max-width: 1140px) {
+  .filter-bar {
+    margin-right: 60px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .filter-bar {
+    margin-right: 80px;
+  }
+}
+
+@media (max-width: 1072px) {
+  .filter-bar {
+    margin-right: 15px;
+  }
+}
+
+@media (max-width: 1064px) {
+  .filter-bar {
+    margin-right: 50px;
+  }
+}
+

@@ -1,11 +1,36 @@
 import {profileDropdown} from "./profile-dropdown.js";
 
+document.addEventListener('DOMContentLoaded', async () => {
+    profileDropdown();
+    await getUserId();
+});
+
 let userID: number | null = null;
 
 // const openBtn = document.getElementById('openModal')! as HTMLButtonElement;
 const closeBtn = document.getElementById('closeModal')! as HTMLButtonElement;
 const modal = document.getElementById('modal')! as HTMLDivElement;
 const errorMsg = document.getElementById('error-msg')! as HTMLHeadingElement;
+
+const part1 = document.querySelector(".part1") as HTMLBodyElement;
+
+const searchInput = document.querySelector('.search-input') as HTMLInputElement;
+const searchBtn = document.querySelector('.search-btn') as HTMLButtonElement;
+
+const filterBar = document.querySelector('.filter-bar') as HTMLDivElement;
+const ratingFilter = document.getElementById('rating-filter') as HTMLSelectElement;
+
+interface Food {
+    strMeal: string;
+    idMeal: string;
+    [key: string]: string;
+    strMealThumb: string;
+    strInstructions: string;
+    strYoutube: string;
+}
+
+let currentMeals: Food[] = [];
+let currentRatings: any[] = [];
 
 // openBtn.addEventListener('click', () => {
 //     modal.classList.add("open");
@@ -15,14 +40,10 @@ closeBtn.addEventListener('click', () => {
     modal.classList.remove("open");
 });
 
-const part1 = document.querySelector(".part1") as HTMLBodyElement;
-
-const searchInput = document.querySelector('.search-input') as HTMLInputElement;
-const searchBtn = document.querySelector('.search-btn') as HTMLButtonElement;
-
-document.addEventListener('DOMContentLoaded', async () => {
-    profileDropdown();
-    await getUserId();
+ratingFilter.addEventListener("change", () => {
+    if (currentMeals.length > 0) {
+        renderCards(currentMeals, currentRatings);
+    }
 });
 
 document.querySelectorAll('.search-tag').forEach(tag => {
@@ -32,17 +53,18 @@ document.querySelectorAll('.search-tag').forEach(tag => {
         part1.innerHTML = '';
         document.getElementById('results-label')!.style.display = 'block';
         getData(query);
+        filterBar.style.display = 'flex';
     });
 });
-
 
 
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (query) {
         part1.innerHTML = '';
-        document.getElementById('results-label')!.style.display = 'block'; // ← add this
+        document.getElementById('results-label')!.style.display = 'block';
         getData(query);
+        filterBar.style.display = 'flex';
     }
 });
 
@@ -53,6 +75,7 @@ searchInput.addEventListener('keypress', (e) => {
             part1.innerHTML = '';
             getData(query)
             console.log(query)
+            filterBar.style.display = 'flex';
         }
     }
 });
@@ -72,69 +95,51 @@ async function getUserId() {
 
 }
 
-
-interface Food {
-    strMeal: string;
-    idMeal: string;
-    [key: string]: string;
-    strMealThumb: string;
-    strInstructions: string;
-    strYoutube: string;
-}
-
 async function getData(food: string) {
     try {
         const response = await fetch(`/api-info/search/${food}`);
         const data = await response.json();
 
-        if (data.meals && data.meals.length > 1) { 
-            data.meals.forEach((meal: Food) => {
-                // console.log(meal);
-                createFoodCard(meal);
-            });
-        } else if (data.meals && data.meals.length === 1) {
-            createFoodCard(data.meals[0]);
-        }
-                
-        const dataMeals = data.meals;
+        if (!data.meals) return null;
 
-        const ratings = await getAllRatings();
-        console.log(ratings);
+        currentMeals = data.meals;
+        currentRatings = await getAllRatings();
 
-        ratings.forEach((rating: any) => {
-            dataMeals.forEach((meal: Food) => {
-                if (rating.meal_id === Number(meal.idMeal)) {
-                    const card = document.querySelector(`[data-meal-id="${meal.idMeal}"]`);
+        renderCards(currentMeals, currentRatings);
 
-                    if (card) {
-                        let total = Number(card.getAttribute('data-total')) || 0;
-                        let count = Number(card.getAttribute('data-count')) || 0;
-
-                        total += rating.meal_rating;
-                        count += 1;
-
-                        const average = (total / count).toFixed(1);
-
-                        card.setAttribute('data-total', String(total));
-                        card.setAttribute('data-count', String(count));
-
-                        const ratingDisplay = card.querySelector('.food-rating');
-                        if (ratingDisplay) {
-                            ratingDisplay.textContent = `⭐ ${average} (${count} reviews)`;
-                        }
-                    }
-                }
-            });
-        });
-        
-        console.log(dataMeals)
         return data;
-
     } catch (err) {
         console.log(err);
         return null;
     }
 }
+
+function renderCards(meals: Food[], ratings: any[]) {
+    part1.innerHTML = '';
+
+    const sort = ratingFilter.value;
+    const sorted = [...meals].sort((a, b) => {
+        const ratingA = getAverageRating(a, ratings);
+        const ratingB = getAverageRating(b, ratings);
+        if (sort === "low") return ratingA - ratingB;
+        if (sort === "high") return ratingB - ratingA;
+        return 0;
+    });
+
+    sorted.forEach(meal => {
+        const avg = getAverageRating(meal, ratings);
+        const count = ratings.filter(r => r.meal_id === Number(meal.idMeal)).length;
+        createFoodCard(meal, avg, count);
+    });
+}
+
+function getAverageRating(meal: Food, ratings: any[]): number {
+    const mealRatings = ratings.filter(r => r.meal_id === Number(meal.idMeal));
+    if (mealRatings.length === 0) return 0;
+    const total = mealRatings.reduce((sum: number, r: any) => sum + r.meal_rating, 0);
+    return total / mealRatings.length;
+}
+
 
 async function getAllRatings() {
     const response1 = await fetch(`/display-ratings`);
@@ -144,7 +149,7 @@ async function getAllRatings() {
 
 // getData("pizza");
 
-async function createFoodCard(meal: Food) {
+async function createFoodCard(meal: Food, avgRating: number = 0, ratingCount: number = 0) {
 
     const card1 = document.createElement("div");
     const card2 = document.createElement("div");
@@ -214,7 +219,9 @@ async function createFoodCard(meal: Food) {
     unifiedDiv.setAttribute('data-count', '0');
 
     foodRating.className = "food-rating";
-    foodRating.textContent = '(No ratings yet)';
+    foodRating.textContent = ratingCount > 0
+        ? `⭐ ${avgRating.toFixed(1)} (${ratingCount} reviews)`
+        : '(No ratings yet)';
 
     foodPlusRating.className = "foodplusrating";
 
