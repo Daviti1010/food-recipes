@@ -43,16 +43,26 @@ const app = express();
 const port = 3000;
 
 
+// const db = new pg.Client({
+//   user: process.env.USER,
+//   host: process.env.HOST,
+//   database: process.env.DATABASE,
+//   password: process.env.PASSWORD,
+//   port: Number(process.env.PORT),
+//   ssl: false
+// });
+// db.connect();
 
-const db = new pg.Client({
-  user: process.env.USER,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD,
-  port: Number(process.env.PORT),
-  ssl: false
+
+const db = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production'
+    ? { rejectUnauthorized: false }
+    : false
 });
-db.connect();
+
+// export default db;
+
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json())
