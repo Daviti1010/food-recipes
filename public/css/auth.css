@@ -366,7 +366,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 #confirm-btn:hover {
-    background: #a0501f;
+    background: #9f4f1e;
 }
 
 #success {
@@ -390,8 +390,44 @@ input[type="number"]::-webkit-outer-spin-button {
     font-family: 'Lato', sans-serif;
 }
 
+#code-input-label {
+    margin-top: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #5c3d2e;
+    letter-spacing: 0.3px;
+}
+
+#register-btn {
+    width: 100%;
+    padding: 13px;
+    background: #c0622d;
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 10px;
+}
+
 #verify-btn:hover {
     background-color: #04a004;
+}
+
+#messageR {
+    text-align: center;
+    margin-top: 14px;
+    color: #3b7a1e;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+#register-btn:hover {
+    background: #9f4f1e;
 }
 
 #wait-message {

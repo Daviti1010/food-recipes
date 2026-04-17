@@ -11,8 +11,11 @@ const otpError = document.getElementById("otp-error") as HTMLParagraphElement;
 
 const setPasswordInput = document.getElementById("setPassword") as HTMLInputElement;
 const confirmPasswordInput = document.getElementById("confirmPassword") as HTMLInputElement;
-const registerBtn = document.getElementById("register-btn") as HTMLButtonElement;
+const continueBtn = document.getElementById("continue-btn") as HTMLButtonElement;
 const form = document.querySelector(".form") as HTMLFormElement;
+const registerCodeDiv = document.querySelector(".register-code") as HTMLDivElement;
+const registerBtn = document.getElementById("register-btn") as HTMLButtonElement;
+const registerSuccessMsg = document.getElementById("messageR") as HTMLParagraphElement;
 
 const passwordGroup = document.querySelector(".password-group1") as HTMLDivElement;
 const setNewPasswordInput = document.getElementById("setNewPassword") as HTMLInputElement;
@@ -27,7 +30,7 @@ const successMessage = document.getElementById("message") as HTMLParagraphElemen
 
 let currentEmail = "";
 
-if (registerBtn) {
+if (continueBtn) {
      setPasswordInput.addEventListener("keyup", () => {
         validatePasswords(setPasswordInput.value.trim(), confirmPasswordInput.value.trim());
     });
@@ -36,7 +39,8 @@ if (registerBtn) {
         validatePasswords(setPasswordInput.value.trim(), confirmPasswordInput.value.trim());
     });
 
-    form?.addEventListener("submit", async function(e) {
+    continueBtn.addEventListener("click", async function(e) {
+    // registerCodeDiv.style.display = "block";
     e.preventDefault();
     
     const errors = validatePasswords(setPasswordInput.value.trim(), confirmPasswordInput.value.trim());
@@ -44,11 +48,43 @@ if (registerBtn) {
     if (errors.isValid === false) {
         return;
     }
+
+    registerCodeDiv.style.display = "block";
+    continueBtn.style.display = "none";
+    await fetch("/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registrationEmail: emailInput.value.trim() })
+    });
     
     passwordError.textContent = '';
     confirmError.textContent = '';
-    // submitForm(setPasswordInput.value, emailInput.value);
-     try {
+
+    registerBtn.addEventListener("click", async () => {
+    const code = codeInput.value.trim();
+
+    if (!code) {
+        otpError.textContent = "Please enter the code.";
+        return;
+    }
+
+    otpError.textContent = "";
+
+    const data = await fetch("/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailInput.value.trim(), code })
+    }).then(r => r.json());
+
+    if (!data.success) {
+        otpError.textContent = data.message;
+        return;
+    }
+
+    // });
+
+
+    try {
         const response = await fetch('/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -57,16 +93,13 @@ if (registerBtn) {
                 email: emailInput.value.trim()
              })
         });
-
-        // console.log('Response status:', response.status);
-        // console.log('Response ok:', response.ok);   
         
         const data = await response.json();
         // console.log('Response data:', data);
 
         if (data.success) {
             console.log('Success! Redirecting...');
-            successMessage.textContent = 'Success!'
+            registerSuccessMsg.textContent = 'Success!'
             setTimeout(() => {
                 window.location.href = '/';
             }, 2000);
@@ -77,7 +110,7 @@ if (registerBtn) {
         console.error(err);
         passwordError.textContent = 'Registration failed';
     }
-
+        });
     });
 
 } else if (a_form) {

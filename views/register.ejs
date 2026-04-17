@@ -15,7 +15,7 @@
     <p class="auth-eyebrow">Get started</p>
     <h1>Create Account</h1>
 
-    <form action="/register" method="POST" class="form">
+    <form class="form">
 
         <div class="input-group">
             <label>Email</label>
@@ -40,9 +40,16 @@
             <p id="confirm-error" class="error"></p>
         </div>
 
-        <p id="message"></p>
+        <div class="register-code" style="display:none">
+            <label for="code-input" id="code-input-label">Enter code sent to your email:</label>
+            <input type="number" id="code-input">
+            <p id="otp-error" class="error"></p>
+            <button type="button" id="register-btn">Register</button>
+        </div>
 
-        <button type="submit" id="register-btn">Register</button>
+        <p id="messageR"></p>
+
+        <button type="submit" id="continue-btn">Continue</button>
 
         <div class="divider"><span>or</span></div>
 

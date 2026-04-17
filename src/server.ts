@@ -50,6 +50,7 @@ const db = new pg.Client({
   database: process.env.DATABASE,
   password: process.env.PASSWORD,
   port: Number(process.env.PORT),
+  ssl: false
 });
 db.connect();
 
@@ -88,30 +89,40 @@ transporter.verify()
   .then(() => console.log("Mailer ready"))
   .catch(console.error);
 
-async function sendMail(email: string, code: number) {
+async function sendMail(email: string, code: number, message: string) {
   await transporter.sendMail({
     from: `"Recipes" <${process.env.SMTP_USER}>`,
     to: email,
-    subject: "Your password reset code",
-    html: `<p>Your reset code:</p>
+    subject: `${message}`,
+    html: `<p>${message}</p>
            <h2 style="letter-spacing:8px;font-family:monospace">${code}</h2>
            <p>Expires in <strong>10 minutes</strong>.</p>`,
   });
 }
 
 app.post("/send-email", async (req, res) => {
-  const { email } = req.body;
+  // const { email, reg_email } = req.body;
+  const email = req.body.email;
+  const registrationEmail = req.body.registrationEmail;
   const code = Math.floor(100000 + Math.random() * 900000);
+  let message = '';
 
-  otpStore[email] = { code, expiresAt: Date.now() + 10 * 60 * 1000 };
+  if (email) {
+    otpStore[email] = { code, expiresAt: Date.now() + 10 * 60 * 1000 };
+    message = "Your password reset code.";
+  } else {
+    otpStore[registrationEmail] = { code, expiresAt: Date.now() + 10 * 60 * 1000 };
+    message = "Your registration code.";
+  }
 
   try {
-    await sendMail(email, code);
+    await sendMail(email || registrationEmail, code, message);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, message: "Failed to send email" });
   }
 });
+
 
 
 app.post("/find-user", async (req, res) => {
