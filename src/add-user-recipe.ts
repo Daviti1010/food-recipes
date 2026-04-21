@@ -47,15 +47,15 @@ instructionsInput.placeholder = 'Instructions: ';
 let inputDiv = document.createElement("div") as HTMLDivElement;
 inputDiv.className = 'input-div';
 
-let browseOrDragText = document.createElement("p") as HTMLParagraphElement; 
-browseOrDragText.innerHTML = 'Drag & drop images here or <span class="browse">Browse</span>'
+let uploadText = document.createElement("p") as HTMLParagraphElement; 
+uploadText.innerHTML = '<span class="click">Click here</span> to upload an image'
 
 let input = document.createElement("input") as HTMLInputElement;
 input.type = "file";
 input.className = "file";
 input.accept = "image/png, image/jpeg, image/jpg, image/webp";
 
-inputDiv.appendChild(browseOrDragText);
+inputDiv.appendChild(uploadText);
 inputDiv.appendChild(input);
 
 
@@ -150,8 +150,6 @@ function addImage(input: any, inputDiv: any) {
                 // console.log(e);
                 const img = document.createElement('img');
                 img.src = e.target?.result as string;
-                // img.style.width = '300px';
-                // img.style.height = '300px';
                 
                 inputDiv.innerHTML = '';
                 inputDiv.appendChild(img);
@@ -159,32 +157,5 @@ function addImage(input: any, inputDiv: any) {
             
             reader.readAsDataURL(file);
         }
-    });
-
-    // For drag and drop
-    inputDiv.addEventListener('drop', (e: any) => {
-        e.preventDefault();
-        
-        const file = e.dataTransfer?.files?.[0];
-        
-        if (file) {
-            const reader = new FileReader();
-            
-            reader.onload = (e) => {
-                const img = document.createElement('img');
-                img.src = e.target?.result as string;
-                img.style.width = '300px';
-                img.style.height = '300px';
-                
-                inputDiv.innerHTML = '';
-                inputDiv.appendChild(img);
-            };
-            
-            reader.readAsDataURL(file);
-        }
-    });
-
-    inputDiv.addEventListener('dragover', (e: any) => {
-        e.preventDefault();
     });
 }

@@ -9,6 +9,8 @@ import session from "express-session";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import passport from "passport";
 import nodemailer from "nodemailer";
+import cloudinary from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 dotenv.config();
 
@@ -25,19 +27,35 @@ declare module "express-session" {
 }
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-})
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, './public/uploads/')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// })
 
-const upload = multer({ 
-  storage: storage
+// const upload = multer({ 
+//   storage: storage
+// });
+
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary.v2,
+  params: {
+    folder: 'recipes',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+  } as any,
+});
+
+export const upload = multer({ storage });
 
 const app = express();
 const port = 3000;
@@ -464,7 +482,7 @@ app.post('/user-recipe/upload', upload.single('image'), async (req, res) => {
     }
 
     try {
-      const imageUrl = '/uploads/' + req.file.filename;
+      const imageUrl = req.file?.path;
       
       await db.query(
           'INSERT INTO app_user_recipes (user_id, name, origin, ingredients, video, instructions, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7)',
@@ -527,7 +545,7 @@ app.put('/api/recipes/:id', upload.single('image'), async (req, res) => {
       let imageUrl;
 
       if (req.file) {
-          imageUrl = `/uploads/${req.file.filename}`;
+          imageUrl = req.file.path;
       } else if (req.body.image_url) {
           imageUrl = req.body.image_url;
       } else {
