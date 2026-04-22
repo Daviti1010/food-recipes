@@ -599,3 +599,13 @@ img {
   }
 }
 
+@media (max-width: 435px) {
+  .header-container ul {
+    padding-right: 25px;
+    gap: 20px; 
+  }
+
+  .filter-bar {
+    margin-right: 10px;
+  }
+}

@@ -370,3 +370,17 @@ header {
     border-color: #c0622d;
     transform: scale(1.1);
 }
+
+@media (max-width: 435px) {
+  .header-container ul {
+    padding-right: 25px;
+    gap: 20px; 
+  }
+}
+
+/* @media (max-width: 415px) {
+  .header-container ul {
+    padding-right: 25px;
+    gap: 20px; 
+  }
+} */

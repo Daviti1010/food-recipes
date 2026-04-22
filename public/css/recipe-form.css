@@ -413,3 +413,27 @@ header {
     outline: none;
     box-shadow: 0 0 0 3px rgba(253, 160, 133, 0.4);
 }
+
+@media (max-width: 435px) {
+  .header-container ul {
+    padding-right: 25px;
+    gap: 20px; 
+  }
+
+  .upper-div {
+    flex-direction: column;
+  }
+
+  .input-div {
+    width: 100%;
+ }
+
+ .pic-div {
+    width: 100%;
+ }
+
+ .input-div img {
+    width: 100%;
+ }
+
+}
