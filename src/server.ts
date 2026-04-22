@@ -16,7 +16,7 @@ dotenv.config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const CALLBACK_URL = process.env.CALLBACK_URL;
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
 const salt_rounds = 10;
 
@@ -700,7 +700,7 @@ passport.use(
     new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID!,
     clientSecret: GOOGLE_CLIENT_SECRET!,
-    callbackURL: CALLBACK_URL!,
+    callbackURL: `${BASE_URL}/auth/google/recipes`!,
     }, async (accessToken: any, refreshToken: any, profile: any, cb: any) => {
       console.log(profile);
       
