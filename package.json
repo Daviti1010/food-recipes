@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "tsx watch src/server.ts",
+    "dev:server": "nodemon --watch src --watch views --ext ts,ejs --exec tsx src/server.ts",
     "dev:client": "tsc --watch",
     "build": "tsc",
     "start": "node dist/server.js"
