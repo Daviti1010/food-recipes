@@ -168,3 +168,7 @@ recipes-in-web/
 ├── tsconfig.json
 
 └── package.json
+
+## Screenshots
+
+![image alt](https://github.com/Daviti1010/food-recipes/blob/ba2d7e985afce0d08dbfed88e2972c0bbb4e0581/public/uploads/screenshot1.png)
